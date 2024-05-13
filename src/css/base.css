@@ -1,0 +1,45 @@
+.searchList {
+    width: 135px;
+}
+
+
+.button-container {
+    display: grid;
+    grid-template-columns: repeat(3, min-content);
+    gap: 15px; /* 可调整按钮之间的间距 */
+    justify-content: center;
+}
+
+.dialog-footer {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.dialog-buttons-left {
+    display: flex;
+}
+
+
+.demo-form-inline .el-form-item {
+    width: 270px;
+}
+
+.demo-form-inline .el-select {
+    width: 270px;
+}
+
+.align-right {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 0; /* 可选：去除按钮行默认的右边距 */
+}
+
+.align-right-all-checked {
+    margin-top: 0;
+    padding: 0 0 6px;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 0; /* 可选：去除按钮行默认的右边距 */
+}
