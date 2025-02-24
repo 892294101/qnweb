@@ -27,3 +27,5 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+src/.env.dev
+src/.env.pro

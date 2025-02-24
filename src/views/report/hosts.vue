@@ -38,12 +38,11 @@
         </el-row>
       </div>
       <el-form :inline="true">
-        <el-table size="small" v-loading="Loading" border stripe :data="hostList" style="width: 100%;"
-                  :header-cell-style="headerCellStyle" @cell-click="CopyText" >
+        <el-table size="small" v-loading="Loading" border stripe :data="hostList" style="width: 100%;"  :header-cell-style="headerCellStyle" @cell-click="CopyText" >
           <el-table-column label="ID" prop="Id" v-if="false"/>
-          <el-table-column fixed label="项目名" prop="ProjectName" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
-          <el-table-column fixed label="平台名" prop="PlatformName" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
-          <el-table-column label="业务名称" prop="BusinessName" min-width="150" width="auto" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column fixed label="项目名" prop="ProjectName" min-width="120" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column fixed label="平台名" prop="PlatformName" min-width="270" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="业务名称" prop="BusinessName" min-width="150" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="IP地址" prop="Address" min-width="250" width="auto" :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="用户名" prop="UserName.String" min-width="150" width="auto" :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="密码" prop="PassWord.String" min-width="150" width="auto" />

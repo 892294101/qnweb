@@ -37,11 +37,11 @@
         <el-table size="small" v-loading="Loading" border stripe :data="hostGroup" style="width: 100%;"
                   :header-cell-style="headerCellStyle" @cell-click="CopyText">
           <el-table-column label="ID" prop="Id" v-if="false"/>
-          <el-table-column fixed label="项目名" prop="ProjectName" min-width="120" width="auto"/>
-          <el-table-column fixed label="平台名" prop="PlatformName" min-width="120" width="auto"/>
-          <el-table-column label="主机组" prop="GroupName" min-width="120" width="auto"/>
-          <el-table-column label="主机组编码" prop="GroupCode" min-width="150" width="auto" v-if="false" show-overflow-tooltip/>
-          <el-table-column label="IP地址" prop="Address" min-width="220" width="auto" show-overflow-tooltip/>
+          <el-table-column fixed label="项目名" prop="ProjectName" min-width="120" width="auto" show-overflow-tooltip  :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column fixed label="平台名" prop="PlatformName" min-width="180" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="主机组" prop="GroupName" min-width="120" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="主机组编码" prop="GroupCode" min-width="150" width="auto" v-if="false" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="IP地址" prop="Address" min-width="220" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="备注" prop="Note.String" width="150" show-overflow-tooltip/>
           <el-table-column label="更多操作" fixed="right" min-width="200" width="auto">
             <template v-slot="scope">
@@ -188,7 +188,7 @@ import {headerCellStyle} from '@/css/base.js'
 import HostDropDownSet from "@/views/components/HostDropDownSet.vue";
 
 const router = useRouter();
-
+const sortOrders = ['ascending', 'descending', null];
 
 let PermCodeAddHostGroup = ref<object>({"TargetPerm": '/report/hostgroup/add', "CurrentRouter": router.currentRoute.value.path})
 let PermCodeEditHostGroup = ref<object>({"TargetPerm": '/report/hostgroup/edit', "CurrentRouter": router.currentRoute.value.path})

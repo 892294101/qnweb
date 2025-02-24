@@ -34,10 +34,10 @@
         <el-table size="small" v-loading="Loading" border stripe :data="platformList" style="width: 100%;"
                   :header-cell-style="headerCellStyle" @cell-click="CopyText">
           <el-table-column label="ID" prop="Id" v-if="false"/>
-          <el-table-column fixed label="项目名" prop="ProjectName" min-width="120" width="auto"/>
-          <el-table-column fixed label="平台名" prop="PlatformName" min-width="200" width="auto"/>
-          <el-table-column fixed label="所属人" prop="ProjectPerson" min-width="50" width="auto"/>
-          <el-table-column fixed label="创建时间" prop="CreateTime" min-width="150" width="auto"/>
+          <el-table-column fixed label="项目名" prop="ProjectName" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column fixed label="平台名" prop="PlatformName" min-width="130" width="auto" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column fixed label="所属人" prop="ProjectPerson" min-width="50" width="auto" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column fixed label="创建时间" prop="CreateTime" min-width="150" width="auto" :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="备注" prop="Note.String" width="120"/>
           <el-table-column label="更多操作" fixed="right" min-width="150" width="auto">
             <template v-slot="scope">
@@ -134,6 +134,7 @@ import ProjectDropDown from "@/views/components/ProjectDropDown.vue";
 
 const router = useRouter();
 
+const sortOrders = ['ascending', 'descending', null];
 
 let PermCodeAddPlatform = ref<object>({"TargetPerm": '/report/platform/add', "CurrentRouter": router.currentRoute.value.path})
 let PermCodeEditPlatform = ref<object>({"TargetPerm": '/report/platform/edit', "CurrentRouter": router.currentRoute.value.path})
@@ -200,14 +201,19 @@ let editPlatformDialogVisible = ref(false)  // 编辑图层显示
 
 const AddEditPlatformFormRules: FormRules = {
   PlatformName: [
-    {required: true, message: "请输入平台名称", trigger: "blur", min: 2, max: 8},
+    {required: true, message: "请输入平台名称", trigger: "blur", min: 2, max: 30},
     {
       validator: (rule, value, callback) => {
-        if (value && /^[\u4e00-\u9fa5\u3040-\u30ff\u3130-\u318f\uac00-\ud7af\w-]*$/.test(value)) {
+        if (value && /^[\u4e00-\u9fa5a-zA-Z0-9-]*$/.test(value)) {
+          callback();
+        } else {
+          callback(new Error("仅限中文、字母、数字、-"));
+        }
+        /*if (value && /^[\u4e00-\u9fa5\u3040-\u30ff\u3130-\u318f\uac00-\ud7af\w-]*$/.test(value)) {
           callback();
         } else {
           callback(new Error("不能包含特殊符号"));
-        }
+        }*/
       },
     },
   ],

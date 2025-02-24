@@ -48,15 +48,15 @@
         <el-table size="small" v-loading="Loading" border stripe :data="queryList" style="width: 100%;"  :header-cell-style="headerCellStyle"
                   @cell-click="CopyText">
           <el-table-column label="ID" prop="Id" v-if="false"/>
-          <el-table-column fixed label="项目组" prop="ProjectName" min-width="120" width="auto" show-overflow-tooltip/>
-          <el-table-column fixed label="平台" prop="PlatformName" min-width="200" width="auto" show-overflow-tooltip/>
-          <el-table-column fixed label="主机组" prop="GroupName" min-width="150" width="auto" show-overflow-tooltip/>
-          <el-table-column label="主机组编码" prop="GroupCode" v-if="false"/>
-          <el-table-column label="类型" prop="DbType" min-width="80" width="auto" :formatter="formatDbType"/>
-          <el-table-column label="用户" prop="UserName.String" min-width="120" width="auto"/>
-          <el-table-column label="密码" prop="PassWord.String" min-width="120" width="auto"/>
-          <el-table-column label="IP地址" prop="Address" min-width="230" width="auto" show-overflow-tooltip/>
-          <el-table-column label="状态" prop="OnlineStatus.String" width="50" :formatter="formatOnlineStatusType"/>
+          <el-table-column fixed label="项目组" prop="ProjectName" min-width="120" width="auto" show-overflow-tooltip  :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column fixed label="平台" prop="PlatformName" min-width="200" width="auto" show-overflow-tooltip  :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column fixed label="主机组" prop="GroupName" min-width="150" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="主机组编码" prop="GroupCode" v-if="false" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="类型" prop="DbType" min-width="80" width="auto" :formatter="formatDbType" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="用户" prop="UserName.String" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="密码" prop="PassWord.String" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="IP地址" prop="Address" min-width="230" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="状态" prop="OnlineStatus.String" width="50" :formatter="formatOnlineStatusType" :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="备注" prop="Note.String" width="100" show-overflow-tooltip/>
           <el-table-column label="更多操作" fixed="right" min-width="200" width="auto">
             <template v-slot="scope">
@@ -215,6 +215,7 @@ let PermCodeAddDB = ref<object>({"TargetPerm": '/report/database/add', "CurrentR
 let PermCodeEditDB = ref<object>({"TargetPerm": '/report/database/edit', "CurrentRouter": router.currentRoute.value.path})
 let PermCodeDeleteDB = ref<object>({"TargetPerm": '/report/database/delete', "CurrentRouter": router.currentRoute.value.path})
 
+const sortOrders = ['ascending', 'descending', null];
 
 interface queryParamsStruct {
   projectName: string,

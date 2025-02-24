@@ -30,8 +30,8 @@
         <el-table size="small" v-loading="Loading" border stripe :data="projectList" style="width: 100%;"
                   :header-cell-style="headerCellStyle" @cell-click="CopyText">
           <el-table-column label="ID" prop="Id" v-if="false"/>
-          <el-table-column fixed label="项目组" prop="ProjectName" min-width="120" width="auto"/>
-          <el-table-column fixed label="所属人" prop="ProjectPerson.String" min-width="120" width="auto"/>
+          <el-table-column fixed label="项目组" prop="ProjectName" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column fixed label="所属人" prop="ProjectPerson.String" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="备注" prop="Note.String" width="400"/>
           <el-table-column label="更多操作" fixed="right" min-width="120" width="auto">
             <template v-slot="scope">
@@ -130,6 +130,8 @@ const router = useRouter();
 let PermCodeAddProject = ref<object>({"TargetPerm": '/report/project/add', "CurrentRouter": router.currentRoute.value.path})
 let PermCodeEditProject = ref<object>({"TargetPerm": '/report/project/edit', "CurrentRouter": router.currentRoute.value.path})
 let PermCodeDeleteProject = ref<object>({"TargetPerm": '/report/project/delete', "CurrentRouter": router.currentRoute.value.path})
+
+const sortOrders = ['ascending', 'descending', null];
 
 
 interface ValueStruct {
