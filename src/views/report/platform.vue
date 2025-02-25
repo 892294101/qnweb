@@ -34,10 +34,10 @@
         <el-table size="small" v-loading="Loading" border stripe :data="platformList" style="width: 100%;"
                   :header-cell-style="headerCellStyle" @cell-click="CopyText">
           <el-table-column label="ID" prop="Id" v-if="false"/>
-          <el-table-column fixed label="项目名" prop="ProjectName" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
-          <el-table-column fixed label="平台名" prop="PlatformName" min-width="130" width="auto" :sortable="true" :sort-orders="sortOrders"/>
-          <el-table-column fixed label="所属人" prop="ProjectPerson" min-width="50" width="auto" :sortable="true" :sort-orders="sortOrders"/>
-          <el-table-column fixed label="创建时间" prop="CreateTime" min-width="150" width="auto" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="项目名" prop="ProjectName" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="平台名" prop="PlatformName" min-width="180" width="auto" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="所属人" prop="ProjectPerson" min-width="50" width="auto" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="创建时间" prop="CreateTime" min-width="150" width="auto" :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="备注" prop="Note.String" width="120"/>
           <el-table-column label="更多操作" fixed="right" min-width="150" width="auto">
             <template v-slot="scope">
