@@ -82,10 +82,10 @@
                       </el-form-item>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="Host.ProjectName" label="项目名称" width="75"/>
-                  <el-table-column prop="Host.PlatformName" label="平台名称" width="75"/>
-                  <el-table-column prop="Host.BusinessName" label="业务名称" width="82"/>
-                  <el-table-column prop="Host.Address" label="主机地址" width="75"/>
+                  <el-table-column prop="Host.ProjectName" label="项目名称" width="75" show-overflow-tooltip/>
+                  <el-table-column prop="Host.PlatformName" label="平台名称" width="75" show-overflow-tooltip/>
+                  <el-table-column prop="Host.BusinessName" label="业务名称" width="82" show-overflow-tooltip/>
+                  <el-table-column prop="Host.Address" label="主机地址" width="75" show-overflow-tooltip/>
                   <el-table-column width="45">
                     <template #header>
                       <div style="text-align: center;">
