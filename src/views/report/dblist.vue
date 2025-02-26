@@ -56,8 +56,8 @@
           <el-table-column label="用户" prop="UserName.String" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="密码" prop="PassWord.String" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="IP地址" prop="Address" min-width="230" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
-          <el-table-column label="状态" prop="OnlineStatus.String" width="50" :formatter="formatOnlineStatusType" :sortable="true" :sort-orders="sortOrders"/>
-          <el-table-column label="备注" prop="Note.String" width="100" show-overflow-tooltip/>
+          <el-table-column label="状态" prop="OnlineStatus.String" width="70" :formatter="formatOnlineStatusType" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="备注" prop="Note.String" width="200" show-overflow-tooltip/>
           <el-table-column label="更多操作" fixed="right" min-width="200" width="auto">
             <template v-slot="scope">
               <div class="button-container">
@@ -269,8 +269,8 @@ let queryParams = reactive<queryParamsStruct>({
   dbType: "",
   ipAddress: "",
   state: "",
-  pageNum: 0,
-  pageSize: 0,
+  pageNum: 1,
+  pageSize: 10,
   totalSize: 0,
 })
 
@@ -384,13 +384,16 @@ const formatOnlineStatusType = (row, column, cellValue) => {
 const resetDbQueryForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.resetFields()
+  queryParams.pageNum = 1
+  queryParams.pageSize = 10
+  queryParams.totalSize = 0
   queryDBListWhere(queryParams)
 }
 
 
 const queryDBListWhere = (e) => {
-  e.pageSize = 0
-  e.pageNum = 0
+  e.pageSize = 10
+  e.pageNum = 1
   e.totalSize = 0
   getDBList(e)
 }
@@ -630,7 +633,7 @@ const handleSizeChange = (newSize) => {
   if (queryParams.pageSize !== newSize) {
     console.log("进handleSizeChange")
     queryParams.pageSize = newSize;
-    queryParams.pageNum = 0;
+    queryParams.pageNum = 1;
     getDBList(queryParams)
   }
 }

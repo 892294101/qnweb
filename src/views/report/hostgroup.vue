@@ -292,8 +292,8 @@ let queryParams = reactive<queryParamsStruct>({
   PlatformName: "",
   GroupName: "",
   Address: "",
-  pageNum: 0,
-  pageSize: 0,
+  pageNum: 1,
+  pageSize: 10,
   totalSize: 0,
 })
 
@@ -355,8 +355,8 @@ const queryHostGroupFormRef = ref<FormInstance>();
 const resetQueryHostGroupForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.resetFields()
-  queryParams.pageNum = 0
-  queryParams.pageSize = 0
+  queryParams.pageNum = 1
+  queryParams.pageSize = 10
   queryParams.totalSize = 0
   getHostGroup(queryParams)
 }
@@ -428,7 +428,7 @@ const deleteHostGroupEvent = async <T extends HostGroupStruct>(row: T, formE2: F
 const handleSizeChange = (newSize) => {
   if (queryParams.pageSize !== newSize) {
     queryParams.pageSize = newSize;
-    queryParams.pageNum = 0;
+    queryParams.pageNum = 1;
     getHostGroup(queryParams)
   }
 }
@@ -441,8 +441,8 @@ const handleCurrentChange = (newPage) => {
 }
 
 const getHostGroupWhere = (e) => {
-  e.pageSize = 0
-  e.pageNum = 0
+  e.pageSize = 10
+  e.pageNum = 1
   e.totalSize = 0
   getHostGroup(e)
 }

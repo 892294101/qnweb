@@ -257,8 +257,10 @@ let queryParams = reactive<queryParamsStruct>({
   ProjectPerson: "",
   BusinessName: "",
   Address: "",
-  pageNum: 0,
-  pageSize: 0,
+/*  pageNum: 0,
+  pageSize: 0,*/
+  pageNum: 1,
+  pageSize: 10,
   totalSize: 0,
 })
 
@@ -324,8 +326,8 @@ const queryHostFormRef = ref<FormInstance>();
 const resetQueryHostForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.resetFields()
-  queryParams.pageNum = 0
-  queryParams.pageSize = 0
+  queryParams.pageNum = 1
+  queryParams.pageSize = 10
   queryParams.totalSize = 0
   getHostList(queryParams)
 }
@@ -400,7 +402,7 @@ const deleteHostEvent = async <T extends HostListStruct>(row: T, formE2: FormIns
 const handleSizeChange = (newSize) => {
   if (queryParams.pageSize !== newSize) {
     queryParams.pageSize = newSize;
-    queryParams.pageNum = 0;
+    queryParams.pageNum = 1;
     getHostList(queryParams)
   }
 }
@@ -413,8 +415,8 @@ const handleCurrentChange = (newPage) => {
 }
 
 const getHostListWhere = (e) => {
-  e.pageSize = 0
-  e.pageNum = 0
+  e.pageSize = 10
+  e.pageNum = 1
   e.totalSize = 0
   getHostList(e)
 }

@@ -191,8 +191,8 @@ let queryParams = reactive<queryParamsStruct>({
   platformName: "",
   projectName: "",
   platformPerson: "",
-  pageNum: 0,
-  pageSize: 0,
+  pageNum: 1,
+  pageSize: 10,
   totalSize: 0,
 })
 
@@ -229,8 +229,8 @@ const EditPlatformFormRef = ref<FormInstance>();
 const resetQueryPlatformForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.resetFields()
-  queryParams.pageNum = 0
-  queryParams.pageSize = 0
+  queryParams.pageNum = 1
+  queryParams.pageSize = 10
   queryParams.totalSize = 0
   getPlatformList(queryParams)
 }
@@ -297,7 +297,7 @@ const cancelPlatformEditFormClose = ((formEl: FormInstance | undefined) => {
 const handleSizeChange = (newSize) => {
   if (queryParams.pageSize !== newSize) {
     queryParams.pageSize = newSize;
-    queryParams.pageNum = 0;
+    queryParams.pageNum = 1;
     getPlatformList(queryParams)
   }
 }
@@ -309,8 +309,8 @@ const handleCurrentChange = (newPage) => {
   }
 }
 const getPlatformListWhere = (e) => {
-  e.pageSize = 0
-  e.pageNum = 0
+  e.pageSize = 10
+  e.pageNum = 1
   e.totalSize = 0
   getPlatformList(e)
 }

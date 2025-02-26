@@ -179,8 +179,8 @@ interface queryParamsStruct {
 let queryParams = reactive<queryParamsStruct>({
   projectName: "",
   projectPerson: "",
-  pageNum: 0,
-  pageSize: 0,
+  pageNum: 1,
+  pageSize: 10,
   totalSize: 0,
 })
 
@@ -226,6 +226,9 @@ const EditProjectFormRef = ref<FormInstance>();
 const resetQueryProjectForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.resetFields()
+  queryParams.pageNum = 1
+  queryParams.pageSize = 10
+  queryParams.totalSize = 0
   getProjectListWhere(queryParams)
 }
 
@@ -280,7 +283,7 @@ const deleteDBEvent = async <T extends ProjectListStruct>(row: T, formE2: FormIn
 const handleSizeChange = (newSize) => {
   if (queryParams.pageSize !== newSize) {
     queryParams.pageSize = newSize;
-    queryParams.pageNum = 0;
+    queryParams.pageNum = 1;
     getProjectList(queryParams)
   }
 }
@@ -293,8 +296,8 @@ const handleCurrentChange = (newPage) => {
 }
 
 const getProjectListWhere = (e) => {
-  e.pageSize = 0
-  e.pageNum = 0
+  e.pageSize = 10
+  e.pageNum = 1
   e.totalSize = 0
   getProjectList(e)
 }
