@@ -1,7 +1,7 @@
 <template>
   <el-select v-model="ObjSet" placeholder="选择主机" :value-key="'Id'"
              filterable clearable remote :loading="LoadHostLoading"
-             :remote="true" :loading-text="'正在提取主机'" @visible-change="rmRequestHost">
+             :loading-text="'正在提取主机'" @visible-change="rmRequestHost">
     <el-option v-for="item in filterHostSet" :key="item.Id" :label="`${item.Address}`" :value="item" :style="{ fontSize: '10px', color: '#828282' }"/>
   </el-select>
 </template>
@@ -23,7 +23,7 @@ interface ValueStruct {
 
 interface HostStruct {
   Id: string
-  ProjectName: string
+  DeptName: string
   PlatformName: string
   BusinessName: string
   Address: string

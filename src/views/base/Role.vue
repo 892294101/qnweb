@@ -566,6 +566,7 @@ const executeChecked = ((childNode: aclMenuList[]) => {
 const allChecked = (() => {
   Loading.value = true
   aclLoading.value = true
+  // 执行选中操作.
   executeChecked(menuList)
   if (allMark.value === 0) {
     allMark.value = 1

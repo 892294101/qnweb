@@ -1,6 +1,6 @@
 <template>
   <el-select v-model="ProjectId" placeholder="选择项目名称" filterable clearable remote :loading="LoadProjectLoading"
-             :remote="true" :loading-text="'正在提取项目'" @visible-change="rmRequestProject">
+             :loading-text="'正在提取项目'" @visible-change="rmRequestProject">
     <el-option v-for="item in filterProjectSet" :key="item.Id" :label="item.ProjectName" :value="item.Id"/>
   </el-select>
 </template>
@@ -43,9 +43,6 @@ const getRemoteHostGroup = async () => {
   for (let i = 0; i < res.data.length; i++) {
     filterProjectSet.push(res.data[i])
   }
-
-  console.log("filterProjectSet:", filterProjectSet)
-
   LoadProjectLoading.value = false
 }
 

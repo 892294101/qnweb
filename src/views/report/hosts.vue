@@ -6,12 +6,12 @@
         <el-input id="PlatformName" class="searchList" placeholder="输入项目名" clearable v-model="queryParams.PlatformName" @keydown.enter.capture="getHostList(queryParams)"/>
       </el-form-item>
 
-      <el-form-item label="项目名" prop="ProjectName">
-        <el-input id="ProjectName" class="searchList" placeholder="输入项目名" clearable v-model="queryParams.ProjectName" @keydown.enter.capture="getHostListWhere(queryParams)"/>
+      <el-form-item label="项目组" prop="DeptName">
+        <el-input id="DeptName" class="searchList" placeholder="输入项目名" clearable v-model="queryParams.DeptName" @keydown.enter.capture="getHostListWhere(queryParams)"/>
       </el-form-item>
 
-      <el-form-item label="所属人" prop="ProjectPerson">
-        <el-input id="ProjectPerson" class="searchList" placeholder="输入所属人" clearable v-model="queryParams.ProjectPerson" @keydown.enter.capture="getHostListWhere(queryParams)"/>
+      <el-form-item label="所属人" prop="DeptPerson">
+        <el-input id="DeptPerson" class="searchList" placeholder="输入所属人" clearable v-model="queryParams.DeptPerson" @keydown.enter.capture="getHostListWhere(queryParams)"/>
       </el-form-item>
 
       <el-form-item label="业务名" prop="BusinessName">
@@ -38,22 +38,25 @@
         </el-row>
       </div>
       <el-form :inline="true">
-        <el-table size="small" v-loading="Loading" border stripe :data="hostList" style="width: 100%;"  :header-cell-style="headerCellStyle" @cell-click="CopyText" >
+        <el-table size="small" v-loading="Loading" border stripe :data="hostList" style="width: 100%;" :header-cell-style="headerCellStyle" @cell-click="CopyText">
           <el-table-column label="ID" prop="Id" v-if="false"/>
-          <el-table-column fixed label="项目名" prop="ProjectName" min-width="120" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column fixed label="项目组" prop="DeptName" min-width="120" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column fixed label="平台名" prop="PlatformName" min-width="270" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="业务名称" prop="BusinessName" min-width="150" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
-          <el-table-column label="IP地址" prop="Address" min-width="250" width="auto" :sortable="true" :sort-orders="sortOrders"/>
-          <el-table-column label="用户名" prop="UserName.String" min-width="150" width="auto" :sortable="true" :sort-orders="sortOrders"/>
-          <el-table-column label="密码" prop="PassWord.String" min-width="150" width="auto" />
-          <el-table-column label="管理地址" prop="RemoteAddress.String" min-width="150" width="auto" :sortable="true" :sort-orders="sortOrders"/>
-          <el-table-column label="管理用户" prop="RemoteUser.String" min-width="150" width="auto" />
-          <el-table-column label="管理密码" prop="RemotePassword.String" min-width="150" width="auto"  />
-          <el-table-column label="所属人" prop="ProjectPerson" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
-          <el-table-column label="备注" prop="Note.String" width="150"/>
-          <el-table-column label="更多操作" fixed="right" min-width="200" width="auto">
+          <el-table-column label="IP地址" prop="Address" min-width="150" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="用户名" prop="UserName.String" min-width="80" width="auto" show-overflow-tooltip  :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="密码" prop="PassWord.String" min-width="150" width="auto" show-overflow-tooltip />
+          <el-table-column label="管理地址" prop="RemoteAddress.String" min-width="150" width="auto" show-overflow-tooltip  :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="管理用户" prop="RemoteUser.String" min-width="80" width="auto" show-overflow-tooltip />
+          <el-table-column label="管理密码" prop="RemotePassword.String" min-width="80" width="auto" show-overflow-tooltip />
+          <el-table-column label="所属人" prop="DeptPerson" min-width="80" width="auto" :sortable="true" show-overflow-tooltip  :sort-orders="sortOrders"/>
+          <el-table-column label="备注" prop="Note.String" min-width="200" width="auto" show-overflow-tooltip />
+          <el-table-column label="更多操作" fixed="right" min-width="250" width="auto">
             <template v-slot="scope">
               <div class="button-container">
+                <div style="display: none" v-permission="PermCodeAddHost">
+                  <el-button plain type="primary" size="small" :loading="cloneLoading" icon="Edit" @click="openCloneHostEvent(scope.row)">克隆</el-button>
+                </div>
                 <div style="display: none" v-permission="PermCodeEditHost">
                   <el-button plain type="primary" size="small" :loading="editLoading" icon="Edit" @click="openEditHostEvent(scope.row)">编辑</el-button>
                 </div>
@@ -117,6 +120,49 @@
         </el-form>
       </el-dialog>
 
+      <!-- 克隆表单. 克隆和添加共用表单-->
+      <el-dialog v-model="cloneHostDialogVisible" title="克隆主机" destroy-on-close left width="650" style="border-radius: 4px;" :show-close="false">
+        <el-form :inline="true" ref="AddHostFormRef" :model="addHostForm" :rules="AddEditHostFormRules"
+                 class="demo-form-inline" status-icon label-width="100px">
+          <el-form-item label="平台名称" prop="PlatformId">
+            <PlatformDropDown v-model="addHostForm.PlatformId"></PlatformDropDown>
+          </el-form-item>
+          <el-form-item label="业务名称" prop="BusinessName">
+            <el-input v-model="addHostForm.BusinessName" placeholder="输入业务名称" clearable/>
+          </el-form-item>
+          <el-form-item label="主机地址" prop="Address">
+            <el-input v-model="addHostForm.Address" placeholder="输入主机地址" clearable/>
+          </el-form-item>
+          <el-form-item label="主机用户" prop="UserName">
+            <el-input v-model="addHostForm.UserName" placeholder="输入主机用户" clearable/>
+          </el-form-item>
+          <el-form-item label="主机密码" prop="PassWord">
+            <el-input v-model="addHostForm.PassWord" placeholder="输入主机密码" clearable/>
+          </el-form-item>
+          <el-form-item label="管理地址" prop="RemoteAddress">
+            <el-input v-model="addHostForm.RemoteAddress" placeholder="输入主机管理地址" clearable/>
+          </el-form-item>
+          <el-form-item label="管理用户" prop="RemoteUser">
+            <el-input v-model="addHostForm.RemoteUser" placeholder="输入主机管理用户" clearable/>
+          </el-form-item>
+          <el-form-item label="管理密码" prop="RemotePassword">
+            <el-input v-model="addHostForm.RemotePassword" placeholder="输入主机管理密码" clearable/>
+          </el-form-item>
+          <el-row>
+            <el-form-item label="备注" prop="Note" style="width: 572px;">
+              <el-input type="textarea" :rows="3" placeholder="可选" v-model="addHostForm.Note"/>
+            </el-form-item>
+          </el-row>
+          <el-row class="align-right">
+            <div class="dialog-footer">
+              <div class="dialog-buttons-left">
+                <el-button size="small" :loading="cloneLoading" @click="cancelHostCloneFormClose(AddHostFormRef)">取消</el-button>
+                <el-button size="small" :loading="cloneLoading" type="primary" @click="CommitHostCloneEvent(AddHostFormRef,queryHostFormRef)">克隆</el-button>
+              </div>
+            </div>
+          </el-row>
+        </el-form>
+      </el-dialog>
 
       <!-- 编辑表单-->
       <el-dialog v-model="editHostDialogVisible" title="修改主机" destroy-on-close left width="650" style="border-radius: 4px;" :show-close="false">
@@ -171,7 +217,7 @@
 </template>
 
 <script lang="ts" setup>
-import {onMounted, reactive, ref,PropType} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import {ElDialog, ElMessage, ElMessageBox, ElTable, FormInstance, type FormRules} from 'element-plus';
 import {useRouter} from 'vue-router'
 import {CopyText} from '@/utils/public'
@@ -183,6 +229,7 @@ const sortOrders = ['ascending', 'descending', null];
 
 const router = useRouter();
 
+// 添加和克隆全是相同
 let PermCodeAddHost = ref<object>({"TargetPerm": '/report/hosts/add', "CurrentRouter": router.currentRoute.value.path})
 let PermCodeEditHost = ref<object>({"TargetPerm": '/report/hosts/edit', "CurrentRouter": router.currentRoute.value.path})
 let PermCodeDeleteHost = ref<object>({"TargetPerm": '/report/hosts/delete', "CurrentRouter": router.currentRoute.value.path})
@@ -201,8 +248,8 @@ interface HostListStruct {
   Id: string
   PlatformId: string
   PlatformName: string
-  ProjectName: string
-  ProjectPerson: string
+  DeptName: string
+  DeptPerson: string
   BusinessName: string
   Address: string
   UserName: ValueStruct
@@ -235,14 +282,15 @@ let editHostForm = reactive<AddEditHostStruct>({Address: "", BusinessName: "", I
 
 let Loading = ref<boolean>(false); // 搜索\重置、新增按钮,表格loading使用
 let addLoading = ref<boolean>(false); // 添加弹出层加载按钮
+let cloneLoading = ref<boolean>(false); // 克隆弹出层加载按钮
 let editLoading = ref<boolean>(false); // 编辑弹出层加载按钮
 let deleteLoading = ref<boolean>(false); // 删除按钮加载
 
 // 表单查询接口
 interface queryParamsStruct {
   PlatformName: string
-  ProjectName: string
-  ProjectPerson: string
+  DeptName: string
+  DeptPerson: string
   BusinessName: string
   Address: string
   pageNum: number,
@@ -253,18 +301,19 @@ interface queryParamsStruct {
 // 查询表单对象
 let queryParams = reactive<queryParamsStruct>({
   PlatformName: "",
-  ProjectName: "",
-  ProjectPerson: "",
+  DeptName: "",
+  DeptPerson: "",
   BusinessName: "",
   Address: "",
-/*  pageNum: 0,
-  pageSize: 0,*/
+  /*  pageNum: 0,
+    pageSize: 0,*/
   pageNum: 1,
   pageSize: 10,
   totalSize: 0,
 })
 
 let addHostDialogVisible = ref(false) // 添加图层显示
+let cloneHostDialogVisible = ref(false)  // 克隆图层显示
 let editHostDialogVisible = ref(false)  // 编辑图层显示
 
 const ipPattern = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
@@ -272,13 +321,13 @@ const ipPattern = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]
 const AddEditHostFormRules: FormRules = {
   PlatformId: [{required: true, message: "请选择平台名称", trigger: "blur"},],
   BusinessName: [
-    {required: true, message: "请输入业务", trigger: "blur", min: 2, max: 8},
+    {required: true, message: "最少2位，最长30位", trigger: "blur", min: 2, max: 30},
     {
       validator: (rule, value, callback) => {
-        if (value && /^[\u4e00-\u9fa5\u3040-\u30ff\u3130-\u318f\uac00-\ud7af\w-]*$/.test(value)) {
+        if (value && /^[\u4e00-\u9fa5a-zA-Z0-9\-\\.]+$/.test(value)) {
           callback();
         } else {
-          callback(new Error("不能包含特殊符号"));
+          callback(new Error("仅限中文、字母、数字、-、."));
         }
       },
     },
@@ -353,6 +402,20 @@ const openAddHostEvent = () => {
   addHostForm.RemoteUser = 'root'
 }
 
+// 打开克隆图层. 清空form表单
+const openCloneHostEvent = async <T extends HostListStruct>(row: T): Promise<void> => {
+  clearHostForm(addHostForm)
+  addHostForm.PlatformId = row.PlatformId
+  addHostForm.Address = row.Address
+  addHostForm.BusinessName = row.BusinessName
+  addHostForm.UserName = row.UserName.String
+  addHostForm.PassWord = row.PassWord.String
+  addHostForm.RemoteAddress = row.RemoteAddress.String
+  addHostForm.RemotePassword = row.RemotePassword.String
+  addHostForm.RemoteUser = row.RemoteUser.String
+  addHostForm.Note = row.Note.String
+  cloneHostDialogVisible.value = true
+}
 
 // 打开编辑图层. 清空form表单
 const openEditHostEvent = async <T extends HostListStruct>(row: T): Promise<void> => {
@@ -457,10 +520,38 @@ const cancelHostEditFormClose = (formEl: FormInstance | undefined) => {
   editLoading.value = false
 }
 
+// 克隆图层取消按钮
+const cancelHostCloneFormClose = (formEl: FormInstance | undefined) => {
+  cloneLoading.value = true
+  resetHostFromTable(formEl) // 清空克隆弹出层的表单数据
+  cloneHostDialogVisible.value = false // 关闭弹出层
+  cloneLoading.value = false
+}
+
+
 onMounted(() => {
   getHostList(queryParams)
 })
 
+const CommitHostCloneEvent = (async (formEl: FormInstance | undefined, formE2: FormInstance | undefined) => {
+  if (!formEl) return;
+  await formEl.validate(async (valid: boolean) => {
+    if (valid) {
+      cloneLoading.value = true
+      const {data: res} = await api.addHost(addHostForm)
+      if (res.code !== 200) {
+        ElMessage.error(res.message)
+        cloneLoading.value = false
+        return
+      }
+      cloneLoading.value = false
+      cloneHostDialogVisible.value = false
+      formEl.resetFields() //  清空新增表单
+      ElMessage.success({center: true, message: "添加成功"})
+      await resetQueryHostForm(formE2) // 清空查询表单,并查询
+    }
+  })
+})
 
 const CommitHostAddEvent = (async (formEl: FormInstance | undefined, formE2: FormInstance | undefined) => {
   if (!formEl) return;

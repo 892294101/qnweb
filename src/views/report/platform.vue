@@ -2,16 +2,16 @@
   <el-card body-style="padding:15px; margin-top:5px;">
     <!--搜索区域-->
     <el-form :inline="true" :model="queryParams" ref="queryPlatformFormRef" label-width="70px">
-      <el-form-item label="平台名" prop="platformName">
-        <el-input id="platformName" class="searchList" placeholder="输入项目名" clearable v-model="queryParams.platformName" @keydown.enter.capture="getPlatformListWhere(queryParams)"/>
+      <el-form-item label="平台名" prop="PlatformName">
+        <el-input id="PlatformName" class="searchList" placeholder="输入平台" clearable v-model="queryParams.PlatformName" @keydown.enter.capture="getPlatformListWhere(queryParams)"/>
       </el-form-item>
 
-      <el-form-item label="项目名" prop="projectName">
-        <el-input id="projectName" class="searchList" placeholder="输入项目名" clearable v-model="queryParams.projectName" @keydown.enter.capture="getPlatformListWhere(queryParams)"/>
+      <el-form-item label="项目组" prop="DeptName">
+        <el-input id="DeptName" class="searchList" placeholder="输入项目组" clearable v-model="queryParams.DeptName" @keydown.enter.capture="getPlatformListWhere(queryParams)"/>
       </el-form-item>
 
-      <el-form-item label="所属人" prop="platformPerson">
-        <el-input id="platformPerson" class="searchList" placeholder="输入所属人" clearable v-model="queryParams.platformPerson" @keydown.enter.capture="getPlatformListWhere(queryParams)"/>
+      <el-form-item label="所属人" prop="DeptPerson">
+        <el-input id="DeptPerson" class="searchList" placeholder="输入所属人" clearable v-model="queryParams.DeptPerson" @keydown.enter.capture="getPlatformListWhere(queryParams)"/>
       </el-form-item>
     </el-form>
     <el-form :inline="true">
@@ -34,9 +34,9 @@
         <el-table size="small" v-loading="Loading" border stripe :data="platformList" style="width: 100%;"
                   :header-cell-style="headerCellStyle" @cell-click="CopyText">
           <el-table-column label="ID" prop="Id" v-if="false"/>
-          <el-table-column label="项目名" prop="ProjectName" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="项目名" prop="DeptName" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="平台名" prop="PlatformName" min-width="180" width="auto" :sortable="true" :sort-orders="sortOrders"/>
-          <el-table-column label="所属人" prop="ProjectPerson" min-width="50" width="auto" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="所属人" prop="DeptPerson" min-width="70" width="auto" :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="创建时间" prop="CreateTime" min-width="150" width="auto" :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="备注" prop="Note.String" width="120"/>
           <el-table-column label="更多操作" fixed="right" min-width="150" width="auto">
@@ -178,9 +178,9 @@ let deleteLoading = ref<boolean>(false); // 删除按钮加载
 
 // 表单查询接口
 interface queryParamsStruct {
-  platformName: string,
-  projectName: string,
-  platformPerson: string,
+  PlatformName: string,
+  DeptName: string,
+  DeptPerson: string,
   pageNum: number,
   pageSize: number,
   totalSize: number,
@@ -188,9 +188,9 @@ interface queryParamsStruct {
 
 // 查询表单对象
 let queryParams = reactive<queryParamsStruct>({
-  platformName: "",
-  projectName: "",
-  platformPerson: "",
+  PlatformName: "",
+  DeptName: "",
+  DeptPerson: "",
   pageNum: 1,
   pageSize: 10,
   totalSize: 0,
@@ -201,13 +201,13 @@ let editPlatformDialogVisible = ref(false)  // 编辑图层显示
 
 const AddEditPlatformFormRules: FormRules = {
   PlatformName: [
-    {required: true, message: "请输入平台名称", trigger: "blur", min: 2, max: 30},
+    {required: true, message: "最少2位，最长30位", trigger: "blur", min: 2, max: 30},
     {
       validator: (rule, value, callback) => {
-        if (value && /^[\u4e00-\u9fa5a-zA-Z0-9-]*$/.test(value)) {
+        if (value && /^[\u4e00-\u9fa5a-zA-Z0-9\-\\.]+$/.test(value)) {
           callback();
         } else {
-          callback(new Error("仅限中文、字母、数字、-"));
+          callback(new Error("仅限中文、字母、数字、-、."));
         }
         /*if (value && /^[\u4e00-\u9fa5\u3040-\u30ff\u3130-\u318f\uac00-\ud7af\w-]*$/.test(value)) {
           callback();

@@ -3,11 +3,11 @@
     <!--搜索区域-->
     <el-form :inline="true" :model="queryParams" ref="queryHostGroupFormRef" label-width="70px">
       <el-form-item label="平台名" prop="PlatformName">
-        <el-input id="PlatformName" class="searchList" placeholder="输入项目名" clearable v-model="queryParams.PlatformName" @keydown.enter.capture="getHostGroupWhere(queryParams)"/>
+        <el-input id="PlatformName" class="searchList" placeholder="输入平台名" clearable v-model="queryParams.PlatformName" @keydown.enter.capture="getHostGroupWhere(queryParams)"/>
       </el-form-item>
 
-      <el-form-item label="项目名" prop="ProjectName">
-        <el-input id="ProjectName" class="searchList" placeholder="输入项目名" clearable v-model="queryParams.ProjectName" @keydown.enter.capture="getHostGroupWhere(queryParams)"/>
+      <el-form-item label="项目组" prop="DeptName">
+        <el-input id="DeptName" class="searchList" placeholder="输入项目组" clearable v-model="queryParams.DeptName" @keydown.enter.capture="getHostGroupWhere(queryParams)"/>
       </el-form-item>
 
       <el-form-item label="主机组" prop="GroupName">
@@ -29,7 +29,7 @@
       <div style="display: none" v-permission="PermCodeAddHostGroup">
         <el-row :gutter="10" class="mb8" style="margin-bottom: 15px;">
           <el-col :span="1.5">
-            <el-button plain type="primary" size="small" icon="CirclePlus" @click="openAddHostGroupEvent(AddHostGroupFormRef)" :loading="Loading">新增</el-button>
+            <el-button plain type="primary" size="small" icon="CirclePlus" @click="openAddHostGroupEvent" :loading="Loading">新增</el-button>
           </el-col>
         </el-row>
       </div>
@@ -37,7 +37,7 @@
         <el-table size="small" v-loading="Loading" border stripe :data="hostGroup" style="width: 100%;"
                   :header-cell-style="headerCellStyle" @cell-click="CopyText">
           <el-table-column label="ID" prop="Id" v-if="false"/>
-          <el-table-column fixed label="项目名" prop="ProjectName" min-width="120" width="auto" show-overflow-tooltip  :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column fixed label="项目组" prop="DeptName" min-width="120" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column fixed label="平台名" prop="PlatformName" min-width="180" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="主机组" prop="GroupName" min-width="120" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="主机组编码" prop="GroupCode" min-width="150" width="auto" v-if="false" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
@@ -68,13 +68,15 @@
       <el-dialog v-model="addHostGroupDialogVisible" title="添加主机组" destroy-on-close left width="650" style="border-radius: 4px;" :show-close="false">
         <el-form :inline="true" ref="AddHostGroupFormRef" :model="addHostGroupForm" :rules="AddEditHostGroupFormRules"
                  class="demo-form-inline" status-icon label-width="100px">
-          <el-form-item label="主机组" prop="HostGroupName">
-            <el-input v-model="addHostGroupForm.HostGroupName" placeholder="输入主机组" clearable/>
-          </el-form-item>
+          <el-row>
+            <el-form-item label="主机组" prop="HostGroupName">
+              <el-input v-model="addHostGroupForm.HostGroupName" placeholder="输入主机组" clearable/>
+            </el-form-item>
+          </el-row>
           <el-row>
             <el-form-item label="主机" prop="HostId">
               <div style="display: flex; justify-content: center; ">
-                <el-table height="166px" max-height="166px" :data="addHostGroupForm.HostId" border style="width: 100%; font-size: 8px;" size="small">
+                <el-table height="166px" max-height="166px" :data="addHostGroupForm.HostId" border style=" font-size: 8px;" size="small">
                   <el-table-column prop="Host.Id" label="主机" width="120">
                     <template #default="{row}">
                       <el-form-item prop="Host.Id" size="small" style="width: 104px;">
@@ -82,7 +84,7 @@
                       </el-form-item>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="Host.ProjectName" label="项目名称" width="75" show-overflow-tooltip/>
+                  <el-table-column prop="Host.DeptName" label="项目名称" width="75" show-overflow-tooltip/>
                   <el-table-column prop="Host.PlatformName" label="平台名称" width="75" show-overflow-tooltip/>
                   <el-table-column prop="Host.BusinessName" label="业务名称" width="82" show-overflow-tooltip/>
                   <el-table-column prop="Host.Address" label="主机地址" width="75" show-overflow-tooltip/>
@@ -137,7 +139,7 @@
                       </el-form-item>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="Host.ProjectName" label="项目名称" width="75" show-overflow-tooltip/>
+                  <el-table-column prop="Host.DeptName" label="项目名称" width="75" show-overflow-tooltip/>
                   <el-table-column prop="Host.PlatformName" label="平台名称" width="75" show-overflow-tooltip/>
                   <el-table-column prop="Host.BusinessName" label="业务名称" width="82" show-overflow-tooltip/>
                   <el-table-column prop="Host.Address" label="主机地址" width="75" show-overflow-tooltip/>
@@ -209,7 +211,7 @@ const initialValue: ValueStruct = {
 // 查询表格对象接口
 interface HostGroupStruct {
   Id: string
-  ProjectName: string
+  DeptName: string
   PlatformName: string
   GroupName: string
   GroupCode: string
@@ -223,7 +225,7 @@ let hostGroup = reactive<HostGroupStruct[]>([])
 
 interface HostStructTmp {
   Id: string
-  ProjectName: string
+  DeptName: string
   PlatformName: string
   BusinessName: string
   Address: string
@@ -238,7 +240,7 @@ let HostTemp = reactive<HostStruct>({Number: 0, Address: "", BusinessName: "", I
 
 interface AddressStruct {
   Id: string
-  ProjectName: string
+  DeptName: string
   PlatformName: string
   BusinessName: string
   Address: string
@@ -277,7 +279,7 @@ let deleteLoading = ref<boolean>(false); // 删除按钮加载
 
 // 表单查询接口
 interface queryParamsStruct {
-  ProjectName: string
+  DeptName: string
   PlatformName: string
   GroupName: string
   Address: string
@@ -288,7 +290,7 @@ interface queryParamsStruct {
 
 // 查询表单对象
 let queryParams = reactive<queryParamsStruct>({
-  ProjectName: "",
+  DeptName: "",
   PlatformName: "",
   GroupName: "",
   Address: "",
@@ -303,13 +305,13 @@ let editHostGroupDialogVisible = ref(false)  // 编辑图层显示
 
 const AddEditHostGroupFormRules: FormRules = {
   HostGroupName: [
-    {required: true, message: "请输入主机组名称", trigger: "blur", min: 2, max: 14},
+    {required: true, message: "最少2位，最长30位", trigger: "blur", min: 2, max: 30},
     {
       validator: (rule, value, callback) => {
-        if (value && /^[\u4e00-\u9fa5\u3040-\u30ff\u3130-\u318f\uac00-\ud7af\w-]*$/.test(value)) {
+        if (value && /^[\u4e00-\u9fa5a-zA-Z0-9\-\\.]+$/.test(value)) {
           callback();
         } else {
-          callback(new Error("不能包含特殊符号"));
+          callback(new Error("仅限中文、字母、数字、-、."));
         }
       },
     },
@@ -363,21 +365,13 @@ const resetQueryHostGroupForm = (formEl: FormInstance | undefined) => {
 
 // 打开添加图层. 清空form表单
 const openAddHostGroupEvent = ((formEl: FormInstance | undefined) => {
-  resetHostGroupFromTable(formEl) // 清空add弹出层的表单数据
-  addHostGroupForm.HostId = []
+  resetAddHostGroupFromTable(addHostGroupForm) // 清空add弹出层的表单数据
   addHostGroupDialogVisible.value = true
 })
 
 // 打开编辑图层. 清空form表单
 const openEditHostGroupEvent = (async <T extends HostGroupStruct>(row: T, formE2: FormInstance | undefined): Promise<void> => {
-  resetHostGroupFromTable(formE2) // 清空edit弹出层的表单数据
-
-  editHostGroupForm.Id = ""
-  editHostGroupForm.HostGroupName = ""
-  editHostGroupForm.HostId = []
-  editHostGroupForm.Note = ""
-  editHostGroupForm.GroupCode = ""
-
+  resetEditHostGroupFromTable(editHostGroupForm) // 清空edit弹出层的表单数据
   editLoading.value = true
   const {data: res} = await api.getHostGroupDetail(row)
   if (res.code !== 200) {
@@ -465,7 +459,7 @@ const addRowForAdd = (() => {
   let len = addHostGroupForm.HostId.length
   let addressSet: AddressStruct = {
     Id: "",
-    ProjectName: "",
+    DeptName: "",
     PlatformName: "",
     BusinessName: "",
     Address: "",
@@ -482,7 +476,7 @@ const addRowForEdit = (() => {
   let len = editHostGroupForm.HostId.length
   let addressSet: AddressStruct = {
     Id: "",
-    ProjectName: "",
+    DeptName: "",
     PlatformName: "",
     BusinessName: "",
     Address: "",
@@ -531,7 +525,7 @@ const handleHostSelectForEdit = ((selectedHostId: HostStruct, currentRow: HostSt
     // 如果找到重复的.那么则清空, 不允许出现重复的主机
     let addressSet: AddressStruct = {
       Id: "",
-      ProjectName: "",
+      DeptName: "",
       PlatformName: "",
       BusinessName: "",
       Address: "",
@@ -549,11 +543,11 @@ const handleHostSelectForEdit = ((selectedHostId: HostStruct, currentRow: HostSt
           editHostGroupForm.HostId[i].Host !== undefined &&
           editHostGroupForm.HostId[i].Host.Id !== undefined &&
           editHostGroupForm.HostId[i].Host.Id.length > 0) {
-        if (editHostGroupForm.HostId[i].Host.ProjectName !== currentRow.Host.ProjectName ||
+        if (editHostGroupForm.HostId[i].Host.DeptName !== currentRow.Host.DeptName ||
             editHostGroupForm.HostId[i].Host.PlatformName !== currentRow.Host.PlatformName) {
           let addressSet: AddressStruct = {
             Id: "",
-            ProjectName: "",
+            DeptName: "",
             PlatformName: "",
             BusinessName: "",
             Address: "",
@@ -585,7 +579,7 @@ const handleHostSelectForAdd = ((selectedHostId: HostStruct, currentRow: HostStr
     // 如果找到重复的.那么则清空, 不允许出现重复的主机
     let addressSet: AddressStruct = {
       Id: "",
-      ProjectName: "",
+      DeptName: "",
       PlatformName: "",
       BusinessName: "",
       Address: "",
@@ -603,11 +597,11 @@ const handleHostSelectForAdd = ((selectedHostId: HostStruct, currentRow: HostStr
           addHostGroupForm.HostId[i].Host !== undefined &&
           addHostGroupForm.HostId[i].Host.Id !== undefined &&
           addHostGroupForm.HostId[i].Host.Id.length > 0) {
-        if (addHostGroupForm.HostId[i].Host.ProjectName !== currentRow.Host.ProjectName ||
+        if (addHostGroupForm.HostId[i].Host.DeptName !== currentRow.Host.DeptName ||
             addHostGroupForm.HostId[i].Host.PlatformName !== currentRow.Host.PlatformName) {
           let addressSet: AddressStruct = {
             Id: "",
-            ProjectName: "",
+            DeptName: "",
             PlatformName: "",
             BusinessName: "",
             Address: "",
@@ -627,17 +621,27 @@ const handleHostSelectForAdd = ((selectedHostId: HostStruct, currentRow: HostStr
 const AddHostGroupFormRef = ref<FormInstance>(); // 添加表单ref
 const EditHostGroupFormRef = ref<FormInstance>(); // 编辑表单ref
 
-// 清空图层表单
-const resetHostGroupFromTable = (formEl: FormInstance | undefined) => {
-  if (!formEl) return
-  formEl.resetFields()
-}
+// 清空新增图层表单
+const resetAddHostGroupFromTable = ((t: AddHostGroupStruct) => {
+  t.Id = ""
+  t.HostGroupName = ""
+  t.HostId = []
+  t.Note = ""
+})
+
+// 清空编辑图层表单
+const resetEditHostGroupFromTable = ((t: EditHostGroupStruct) => {
+  t.Id = ""
+  t.HostGroupName = ""
+  t.HostId = []
+  t.Note = ""
+  t.GroupCode = ""
+})
 
 // 添加图层取消按钮
 const cancelHostGroupAddFormClose = (formEl: FormInstance | undefined) => {
   addLoading.value = true
-  resetHostGroupFromTable(formEl) // 清空add弹出层的表单数据
-  addHostGroupForm.HostId = []
+  resetAddHostGroupFromTable(addHostGroupForm) // 清空add弹出层的表单数据
   addHostGroupDialogVisible.value = false // 关闭弹出层
   addLoading.value = false
 }
@@ -645,8 +649,7 @@ const cancelHostGroupAddFormClose = (formEl: FormInstance | undefined) => {
 // 编辑图层取消按钮
 const cancelHostGroupEditFormClose = (formEl: FormInstance | undefined) => {
   editLoading.value = true
-  resetHostGroupFromTable(formEl) // 清空编辑弹出层的表单数据
-  editHostGroupForm.HostId = []
+  resetEditHostGroupFromTable(editHostGroupForm) // 清空编辑弹出层的表单数据
   editHostGroupDialogVisible.value = false // 关闭弹出层
   editLoading.value = false
 }
@@ -667,7 +670,7 @@ const CommitAddHostGroupEvent = async (formEl: FormInstance | undefined, formE2:
       }
       addLoading.value = false
       addHostGroupDialogVisible.value = false
-      resetHostGroupFromTable(formEl) //  清空新增表单
+      resetAddHostGroupFromTable(addHostGroupForm) //  清空新增表单
       ElMessage.success({center: true, message: "添加成功"})
       await resetQueryHostGroupForm(formE2) // 清空查询表单,并查询*/
     }
@@ -675,7 +678,7 @@ const CommitAddHostGroupEvent = async (formEl: FormInstance | undefined, formE2:
 }
 
 
-// 新增信息 提交事件
+// 编辑信息 提交事件
 const CommitEditHostGroupEvent = async (formEl: FormInstance | undefined, formE2: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate(async (valid: boolean) => {
@@ -689,7 +692,7 @@ const CommitEditHostGroupEvent = async (formEl: FormInstance | undefined, formE2
       }
       addLoading.value = false
       editHostGroupDialogVisible.value = false
-      resetHostGroupFromTable(formEl) //  清空新增表单
+      resetEditHostGroupFromTable(editHostGroupForm) //  清空新增表单
       ElMessage.success({center: true, message: "修改成功"})
       await resetQueryHostGroupForm(formE2) // 清空查询表单,并查询
     }

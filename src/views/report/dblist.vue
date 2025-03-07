@@ -2,8 +2,8 @@
   <el-card body-style="padding:15px; margin-top:5px; ">
     <!--搜索区域-->
     <el-form :inline="true" :model="queryParams" ref="queryDBFormRef" label-width="70px">
-      <el-form-item label="项目名" prop="projectName">
-        <el-input id="projectName" class="searchList" placeholder="输入项目名称" clearable v-model="queryParams.projectName" @keydown.enter.capture="queryDBListWhere(queryParams)"/>
+      <el-form-item label="项目组" prop="DeptName">
+        <el-input id="DeptName" class="searchList" placeholder="输入项目名称" clearable v-model="queryParams.DeptName" @keydown.enter.capture="queryDBListWhere(queryParams)"/>
       </el-form-item>
 
       <el-form-item label="平台名" prop="platformName">
@@ -48,14 +48,14 @@
         <el-table size="small" v-loading="Loading" border stripe :data="queryList" style="width: 100%;"  :header-cell-style="headerCellStyle"
                   @cell-click="CopyText">
           <el-table-column label="ID" prop="Id" v-if="false"/>
-          <el-table-column fixed label="项目组" prop="ProjectName" min-width="120" width="auto" show-overflow-tooltip  :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column fixed label="项目组" prop="DeptName" min-width="120" width="auto" show-overflow-tooltip  :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column fixed label="平台" prop="PlatformName" min-width="200" width="auto" show-overflow-tooltip  :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column fixed label="主机组" prop="GroupName" min-width="150" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="主机组编码" prop="GroupCode" v-if="false" :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="类型" prop="DbType" min-width="80" width="auto" :formatter="formatDbType" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="IP地址" prop="Address" min-width="230" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="用户" prop="UserName.String" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="密码" prop="PassWord.String" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
-          <el-table-column label="IP地址" prop="Address" min-width="230" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="状态" prop="OnlineStatus.String" width="70" :formatter="formatOnlineStatusType" :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="备注" prop="Note.String" width="200" show-overflow-tooltip/>
           <el-table-column label="更多操作" fixed="right" min-width="200" width="auto">
@@ -85,7 +85,7 @@
                  class="demo-form-inline" status-icon label-width="100px">
           <el-form-item label="主机组" prop="hostGroup">
             <el-select v-model="addDBForm.hostGroup" placeholder="选择主机组" filterable clearable remote :loading="LoadHostGroupLoading"
-                       :remote="true" :loading-text="'正在提取主机组'" @visible-change="rmRequestHostGroup" @change="listenerHostGroup">
+                       :loading-text="'正在提取主机组'" @visible-change="rmRequestHostGroup" @change="listenerHostGroup">
               <el-option v-for="item in filterHostGroupSet" :key="item.GroupCode" :label="item.GroupName" :value="item.GroupCode"/>
             </el-select>
           </el-form-item>
@@ -110,7 +110,7 @@
               <div style="display: flex; justify-content: center; ">
                 <el-row>
                   <el-table :data="[HostBody]" border style="width: 100%; font-size: 8px; " size="small">
-                    <el-table-column prop="ProjectName" label="项目组" width="100" show-overflow-tooltip/>
+                    <el-table-column prop="DeptName" label="项目组" width="100" show-overflow-tooltip/>
                     <el-table-column prop="PlatformName" label="平台" width="100" show-overflow-tooltip/>
                     <el-table-column prop="GroupName" label="主机组" width="80" show-overflow-tooltip/>
                     <el-table-column prop="Address" label="地址" width="192" show-overflow-tooltip/>
@@ -142,7 +142,7 @@
                  class="demo-form-inline" status-icon label-width="100px">
           <el-form-item label="主机组" prop="hostGroup">
             <el-select v-model="editDBForm.hostGroup" placeholder="选择主机组" filterable clearable remote :loading="LoadHostGroupLoading"
-                       :remote="true" :loading-text="'正在提取主机组'" @visible-change="rmRequestHostGroup" @change="listenerHostGroup">
+                        :loading-text="'正在提取主机组'" @visible-change="rmRequestHostGroup" @change="listenerHostGroup">
               <el-option v-for="item in filterHostGroupSet" :key="item.GroupCode" :label="item.GroupName" :value="item.GroupCode"/>
             </el-select>
           </el-form-item>
@@ -171,7 +171,7 @@
               <div style="display: flex; justify-content: center; ">
                 <el-row>
                   <el-table :data="[HostBody]" border style="width: 100%; font-size: 8px; " size="small">
-                    <el-table-column prop="ProjectName" label="项目组" width="100"/>
+                    <el-table-column prop="DeptName" label="项目组" width="100"/>
                     <el-table-column prop="PlatformName" label="平台" width="100"/>
                     <el-table-column prop="GroupName" label="主机组" width="80"/>
                     <el-table-column prop="Address" label="地址" width="192"/>
@@ -218,7 +218,7 @@ let PermCodeDeleteDB = ref<object>({"TargetPerm": '/report/database/delete', "Cu
 const sortOrders = ['ascending', 'descending', null];
 
 interface queryParamsStruct {
-  projectName: string,
+  DeptName: string,
   platformName: string,
   hostGroup: string,
   dbType: string,
@@ -236,7 +236,7 @@ interface ValueStruct {
 
 interface dbListStruct {
   Id: string,
-  ProjectName: string,
+  DeptName: string,
   PlatformName: string,
   GroupCode: string,
   GroupName: string,
@@ -263,7 +263,7 @@ let onlineStatus = [
 
 
 let queryParams = reactive<queryParamsStruct>({
-  projectName: "",
+  DeptName: "",
   platformName: "",
   hostGroup: "",
   dbType: "",
@@ -543,7 +543,7 @@ const openEditDBEvent = async <T extends dbListStruct>(row: T): Promise<void> =>
 
 interface HostGroupStruct {
   Id: string
-  ProjectName: string
+  DeptName: string
   PlatformName: string
   GroupCode: string
   GroupName: string
@@ -578,7 +578,7 @@ const rmRequestHostGroup = visible => {
 
 interface HostBodyStruct {
   GroupCode: string,
-  ProjectName: string,
+  DeptName: string,
   PlatformName: string,
   GroupName: string,
   Address: string,
@@ -589,12 +589,12 @@ let HostBody = reactive<HostBodyStruct>({
   Address: "",
   GroupName: "",
   PlatformName: "",
-  ProjectName: ""
+  DeptName: ""
 });
 
 const clearHostBody = <T extends HostBodyStruct>(e: T): void => {
   e.GroupCode = ""
-  e.ProjectName = ""
+  e.DeptName = ""
   e.PlatformName = ""
   e.GroupName = ""
   e.Address = ""
@@ -604,7 +604,7 @@ const clearHostBody = <T extends HostBodyStruct>(e: T): void => {
 const listenerHostGroup = (selectedItem) => {
   if (selectedItem === undefined) {
     HostBody.GroupCode = ""
-    HostBody.ProjectName = ""
+    HostBody.DeptName = ""
     HostBody.PlatformName = ""
     HostBody.GroupName = ""
     HostBody.Address = ""
@@ -613,13 +613,13 @@ const listenerHostGroup = (selectedItem) => {
   if (selectedItem.length > 0) {
     for (let i = 0; i < filterHostGroupSet.length; i++) {
       let GroupCode = filterHostGroupSet[i].GroupCode
-      let ProjectName = filterHostGroupSet[i].ProjectName
+      let ProjectName = filterHostGroupSet[i].DeptName
       let PlatformName = filterHostGroupSet[i].PlatformName
       let GroupName = filterHostGroupSet[i].GroupName
       let Address = filterHostGroupSet[i].Address
       if (GroupCode === selectedItem) {
         HostBody.GroupCode = GroupCode
-        HostBody.ProjectName = ProjectName
+        HostBody.DeptName = ProjectName
         HostBody.PlatformName = PlatformName
         HostBody.GroupName = GroupName
         HostBody.Address = Address

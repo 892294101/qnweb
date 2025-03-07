@@ -2,12 +2,12 @@
   <el-card body-style="padding:15px; margin-top:5px;">
     <!--搜索区域-->
     <el-form :inline="true" :model="queryParams" ref="queryProjectFormRef" label-width="70px">
-      <el-form-item label="项目名" prop="projectName">
-        <el-input id="projectName" class="searchList" placeholder="输入项目名" clearable v-model="queryParams.projectName" @keydown.enter.capture="getProjectListWhere(queryParams)"/>
+      <el-form-item label="项目组" prop="DeptName">
+        <el-input id="DeptName" class="searchList" placeholder="输入项目组" clearable v-model="queryParams.DeptName" @keydown.enter.capture="getProjectListWhere(queryParams)"/>
       </el-form-item>
 
-      <el-form-item label="所属人" prop="projectPerson">
-        <el-input id="projectPerson" class="searchList" placeholder="输入所属人" clearable v-model="queryParams.projectPerson" @keydown.enter.capture="getProjectListWhere(queryParams)"/>
+      <el-form-item label="所属人" prop="DeptPerson">
+        <el-input id="DeptPerson" class="searchList" placeholder="输入所属人" clearable v-model="queryParams.DeptPerson" @keydown.enter.capture="getProjectListWhere(queryParams)"/>
       </el-form-item>
     </el-form>
     <el-form :inline="true">
@@ -30,8 +30,8 @@
         <el-table size="small" v-loading="Loading" border stripe :data="projectList" style="width: 100%;"
                   :header-cell-style="headerCellStyle" @cell-click="CopyText">
           <el-table-column label="ID" prop="Id" v-if="false"/>
-          <el-table-column fixed label="项目组" prop="ProjectName" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
-          <el-table-column fixed label="所属人" prop="ProjectPerson.String" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column fixed label="项目组" prop="DeptName" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column fixed label="所属人" prop="DeptPerson.String" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="备注" prop="Note.String" width="400"/>
           <el-table-column label="更多操作" fixed="right" min-width="120" width="auto">
             <template v-slot="scope">
@@ -55,19 +55,18 @@
       </el-form>
 
       <!-- 添加项目表单-->
-      <el-dialog v-model="addProjectDialogVisible" title="添加项目组" destroy-on-close left width="650" style="border-radius: 4px;" :show-close="false" ref="AddProjectFormRef">
+      <el-dialog v-model="addProjectDialogVisible" title="添加项目" destroy-on-close left width="650" style="border-radius: 4px;" :show-close="false" ref="AddProjectFormRef">
         <el-form :inline="true" ref="AddProjectFormRef" :model="addProjectForm" :rules="AddEditProjectFormRules"
                  class="demo-form-inline" status-icon label-width="100px">
-
-          <el-form-item label="项目名称" prop="ProjectName">
-            <el-input v-model="addProjectForm.ProjectName" placeholder="输入项目名称" clearable/>
+          <el-form-item label="部门" prop="DeptId">
+            <DeptDropDown v-model="addProjectForm.DeptId"></DeptDropDown>
           </el-form-item>
-          <el-form-item label="所属人" prop="ProjectPerson">
-            <el-input v-model="addProjectForm.ProjectPerson" placeholder="输入项目所属人" clearable/>
+          <el-form-item label="所属人" prop="DeptPerson">
+            <el-input v-model="addProjectForm.DeptPerson" placeholder="输入项目所属人" clearable/>
           </el-form-item>
           <el-row>
-            <el-form-item label="备注" prop="Note" style="width: 572px;">
-              <el-input type="textarea" :rows="3" placeholder="可选" v-model="addProjectForm.Note"/>
+            <el-form-item label="备注" prop="Note.String" style="width: 572px;">
+              <el-input type="textarea" :rows="3" placeholder="可选" v-model="addProjectForm.Note.String"/>
             </el-form-item>
           </el-row>
 
@@ -84,15 +83,14 @@
 
 
       <!-- 编辑项目表单-->
-      <el-dialog v-model="editProjectDialogVisible" title="添加项目组" destroy-on-close left width="650" style="border-radius: 4px;" :show-close="false">
+      <el-dialog v-model="editProjectDialogVisible" title="编辑项目" destroy-on-close left width="650" style="border-radius: 4px;" :show-close="false">
         <el-form :inline="true" ref="EditProjectFormRef" :model="editProjectForm" :rules="AddEditProjectFormRules"
                  class="demo-form-inline" status-icon label-width="100px">
-
-          <el-form-item label="项目名称" prop="ProjectName">
-            <el-input v-model="editProjectForm.ProjectName" placeholder="输入项目名称" clearable/>
+          <el-form-item label="部门" prop="DeptId">
+            <DeptDropDown v-model="editProjectForm.DeptId"></DeptDropDown>
           </el-form-item>
-          <el-form-item label="所属人" prop="ProjectPerson">
-            <el-input v-model="editProjectForm.ProjectPerson" placeholder="输入项目所属人" clearable/>
+          <el-form-item label="所属人" prop="DeptPerson">
+            <el-input v-model="editProjectForm.DeptPerson" placeholder="输入项目所属人" clearable/>
           </el-form-item>
 
           <el-row>
@@ -124,6 +122,7 @@ import {useRouter} from 'vue-router'
 import {CopyText} from '@/utils/public.js'
 import api from "@/api/index.js";
 import {headerCellStyle} from '@/css/base.js'
+import DeptDropDown from "@/views/components/DeptDropDown.vue";
 
 const router = useRouter();
 
@@ -142,8 +141,8 @@ interface ValueStruct {
 // 项目查询表格对象接口
 interface ProjectListStruct {
   Id: string,
-  ProjectName: string
-  ProjectPerson: ValueStruct
+  DeptName: string
+  DeptPerson: string
   Note: ValueStruct
 }
 
@@ -153,13 +152,25 @@ let projectList = reactive<ProjectListStruct[]>([])
 // 项目新增表格对象
 interface AddEditProjectStruct {
   Id: string,
-  ProjectName: string
-  ProjectPerson: string
+  DeptId: string
+  DeptPerson: string
+  Note: ValueStruct
+}
+
+interface EditProjectStruct {
+  Id: string,
+  DeptId: string
+  DeptPerson: string
   Note: string
 }
 
-let addProjectForm = reactive<AddEditProjectStruct>({Id: "", ProjectName: "", ProjectPerson: "", Note: ""})
-let editProjectForm = reactive<AddEditProjectStruct>({Id: "", ProjectName: "", ProjectPerson: "", Note: ""})
+const initialValue: ValueStruct = {
+  String: "",
+  Valid: false
+}
+
+let addProjectForm = reactive<AddEditProjectStruct>({Id: "", DeptId: "", DeptPerson: "", Note: initialValue})
+let editProjectForm = reactive<EditProjectStruct>({Id: "", DeptId: "", DeptPerson: "", Note: initialValue})
 
 let Loading = ref<boolean>(false); // 搜索\重置、新增按钮,表格loading使用
 let addLoading = ref<boolean>(false); // 添加弹出层加载按钮
@@ -168,8 +179,8 @@ let deleteLoading = ref<boolean>(false); // 删除按钮加载
 
 // 表单查询接口
 interface queryParamsStruct {
-  projectName: string,
-  projectPerson: string,
+  DeptName: string,
+  DeptPerson: string,
   pageNum: number,
   pageSize: number,
   totalSize: number,
@@ -177,8 +188,8 @@ interface queryParamsStruct {
 
 // 查询表单对象
 let queryParams = reactive<queryParamsStruct>({
-  projectName: "",
-  projectPerson: "",
+  DeptName: "",
+  DeptPerson: "",
   pageNum: 1,
   pageSize: 10,
   totalSize: 0,
@@ -188,8 +199,9 @@ let addProjectDialogVisible = ref(false) // 添加图层显示
 let editProjectDialogVisible = ref(false)  // 编辑图层显示
 
 const AddEditProjectFormRules: FormRules = {
-  ProjectName: [
-    {required: true, message: "请输入项目名称", trigger: "blur", min: 2, max: 8},
+  DeptId: [{required: true, message: "请选择部门", trigger: "change"}],
+  DeptPerson: [
+    {required: true, message: "请输入项目所属人", trigger: "change", min: 2, max: 8},
     {
       validator: (rule, value, callback) => {
         if (value && /^[\u4e00-\u9fa5\u3040-\u30ff\u3130-\u318f\uac00-\ud7af\w-]*$/.test(value)) {
@@ -200,19 +212,7 @@ const AddEditProjectFormRules: FormRules = {
       },
     },
   ],
-  ProjectPerson: [
-    {required: true, message: "请输入项目所属人", trigger: "blur", min: 2, max: 8},
-    {
-      validator: (rule, value, callback) => {
-        if (value && /^[\u4e00-\u9fa5\u3040-\u30ff\u3130-\u318f\uac00-\ud7af\w-]*$/.test(value)) {
-          callback();
-        } else {
-          callback(new Error("不能包含特殊符号"));
-        }
-      },
-    },
-  ],
-  Note: [{required: false, trigger: "blur", max: 150}],
+  "Note.String": [{required: false, trigger: "change", max: 150}],
 };
 
 // 查询表单的Ref
@@ -234,21 +234,37 @@ const resetQueryProjectForm = (formEl: FormInstance | undefined) => {
 
 // 打开添加图层. 清空form表单
 const openAddProjectEvent = () => {
-  addProjectDialogVisible.value = true
-  addProjectForm.ProjectName = ""
-  addProjectForm.ProjectPerson = ""
+  addProjectForm.DeptId = ""
+  addProjectForm.DeptPerson = ""
   addProjectForm.Id = ""
-  addProjectForm.Note = ""
+  addProjectForm.Note.String = ""
+  addProjectDialogVisible.value = true
 }
 
+
 // 打开编辑图层. 清空form表单
-const openEditProjectEvent = async <T extends ProjectListStruct>(row: T): Promise<void> => {
+const openEditProjectEvent = (async <T extends EditProjectStruct>(row: T): Promise<void> => {
+  editLoading.value = true
+  editProjectForm.Id = ""
+  editProjectForm.DeptId = ""
+  editProjectForm.DeptPerson = ""
+  editProjectForm.Note = ""
+
+  const {data: res} = await api.getProjectDetail(row)
+  if (res.code !== 200) {
+    ElMessage.error(res.message)
+    editLoading.value = false
+    return
+  }
+
+  editProjectForm.Id = res.data.Id
+  editProjectForm.DeptId = res.data.DeptId
+  editProjectForm.DeptPerson = res.data.DeptPerson
+  editProjectForm.Note = res.data.Note.String
+  editLoading.value = false
   editProjectDialogVisible.value = true
-  editProjectForm.ProjectName = row.ProjectName
-  editProjectForm.ProjectPerson = row.ProjectPerson.String
-  editProjectForm.Id = row.Id
-  editProjectForm.Note = row.Note.String
-}
+})
+
 
 // 删除行事件, 传参: 1、row数据. 2、查询表单的ref
 const deleteDBEvent = async <T extends ProjectListStruct>(row: T, formE2: FormInstance | undefined): Promise<void> => {
@@ -370,6 +386,7 @@ const CommitEditProjectEvent = (async (formEl: FormInstance | undefined, formE2:
     }
   })
 })
+
 
 onMounted(() => {
   getProjectList(queryParams)

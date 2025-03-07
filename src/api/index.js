@@ -122,6 +122,13 @@ export default {
             method: 'post',
         })
     },
+    getProjectDetail(data) {
+        return request({
+            url: "/report/project/edit/detail",
+            method: 'post',
+            data: data
+        })
+    },
 
     // *************************** 平台 ************************** //
     getPlatform(data) {

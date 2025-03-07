@@ -1,6 +1,6 @@
 <template>
   <el-select v-model="PlatformId" placeholder="选择平台名称" filterable clearable remote :loading="LoadPlatformLoading"
-             :remote="true" :loading-text="'正在提取平台'" @visible-change="rmRequestPlatform">
+              :loading-text="'正在提取平台'" @visible-change="rmRequestPlatform">
     <el-option v-for="item in filterPlatformSet" :key="item.Id" :label="`${item.PlatformName}`" :value="item.Id" :style="{ fontSize: '12px' }">
       <span style="float: left">{{ item.PlatformName}}</span>
       <span

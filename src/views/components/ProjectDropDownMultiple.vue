@@ -1,0 +1,102 @@
+<template>
+  <!--  <el-select v-model="ProjectId" placeholder="选择项目" :loading="LoadProjectLoading" style="width: 240px" multiple clearable collapse-tags popper-class="custom-header" :max-collapse-tags="1"
+               :loading-text="'正在提取项目'" @visible-change="rmRequestProject">
+      <template #header>
+        <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">全选</el-checkbox>
+      </template>
+      <el-option v-for="item in ProjectNewSet" :key="item.value" :label="item.label" :value="item.value"/>
+    </el-select>-->
+  <el-select v-model="value" multiple clearable collapse-tags placeholder="选择项目" popper-class="custom-header" :max-collapse-tags="1">
+    <template #header>
+      <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">全选</el-checkbox>
+    </template>
+    <el-option v-for="item in cities" :key="item.value" :label="item.label" :value="item.value"/>
+  </el-select>
+</template>
+
+
+<script lang="ts" setup>
+import {useRouter} from 'vue-router'
+import {CheckboxValueType, ElMessage} from 'element-plus';
+import {onMounted, reactive, ref, watch} from "vue";
+import api from "@/api";
+
+const router = useRouter();
+let LoadProjectLoading = ref<boolean>(false);
+
+const rmRequestProject = visible => {
+  if (visible) {
+    getRemoteHostGroup()
+  }
+}
+
+interface ProjectStruct {
+  Id: string
+  ProjectName: string
+}
+
+let filterProjectSet = reactive<ProjectStruct[]>([])
+const getRemoteHostGroup = async () => {
+  LoadProjectLoading.value = true
+  const {data: res} = await api.getProjectDropDown()
+  if (res.code !== 200) {
+    ElMessage.error(res.message)
+    return
+  }
+  filterProjectSet.splice(0, filterProjectSet.length)
+  for (let i = 0; i < res.data.length; i++) {
+    filterProjectSet.push(res.data[i])
+  }
+  LoadProjectLoading.value = false
+}
+
+const checkAll = ref(false)
+const indeterminate = ref(false)
+const value = ref<CheckboxValueType[]>([])
+const cities = ref([
+  {
+    value: 'Beijing',
+    label: 'Beijing',
+  },
+  {
+    value: 'Shanghai',
+    label: 'Shanghai',
+  },
+])
+
+watch(value, (val) => {
+  if (val.length === 0) {
+    checkAll.value = false
+    indeterminate.value = false
+  } else if (val.length === cities.value.length) {
+    checkAll.value = true
+    indeterminate.value = false
+  } else {
+    indeterminate.value = true
+  }
+})
+
+const handleCheckAll = (val: CheckboxValueType) => {
+  indeterminate.value = false
+  if (val) {
+    value.value = cities.value.map((_) => _.value)
+  } else {
+    value.value = []
+  }
+}
+
+onMounted(() => {
+  getRemoteHostGroup()
+})
+
+</script>
+
+
+<style scoped lang="scss">
+.custom-header {
+  .el-checkbox {
+    display: flex;
+    height: unset;
+  }
+}
+</style>

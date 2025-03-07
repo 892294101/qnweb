@@ -86,22 +86,42 @@
           </el-form-item>
           <el-form-item label="角色" prop="RoleId">
             <el-select v-model="addUserForm.RoleId" placeholder="选择角色" filterable clearable remote :loading="LoadRoleLoading"
-                       :remote="true" :loading-text="'正在提取角色'" @visible-change="rmRequestRoleSet">
+                       :loading-text="'正在提取角色'" @visible-change="rmRequestRoleSet">
               <el-option v-for="item in filterRoleSet" :key="item.Id" :label="item.RoleName" :value="item.Id"/>
             </el-select>
           </el-form-item>
           <el-form-item label="部门" prop="DeptId">
             <el-tree-select v-model="addUserForm.DeptId" :data="filterDeptSet" check-strictly :render-after-expand="false" filterable clearable
                             :loading="LoadDeptLoading" :loading-text="'正在提取部门'" placeholder="选择部门"
-                            @click="getRemoteDeptSet" :props="{value:'Id', label: 'DeptName', children: 'ChildDeptTable'}"
+                            @visible-change="getRemoteDeptSet" :props="{value:'Id', label: 'DeptName', children: 'ChildDeptTable'}"
                             default-expand-all/>
           </el-form-item>
           <el-form-item label="岗位" prop="PostId">
             <el-select v-model="addUserForm.PostId" placeholder="选择岗位" filterable clearable remote :loading="LoadPostLoading"
-                       :remote="true" :loading-text="'正在提取岗位'" @visible-change="rmRequestPostSet">
+                       :loading-text="'正在提取岗位'" @visible-change="rmRequestPostSet">
               <el-option v-for="item in filterPostSet" :key="item.Id" :label="item.PostName" :value="item.Id"/>
             </el-select>
           </el-form-item>
+
+<!--          <el-form-item label="项目" prop="ProjectId">
+            <el-select v-model="value" multiple clearable collapse-tags placeholder="选择项目" popper-class="custom-header" :max-collapse-tags="1">
+              <template #header>
+                <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">全选</el-checkbox>
+              </template>
+              <el-option v-for="item in cities" :key="item.value" :label="item.label" :value="item.value"/>
+            </el-select>
+          </el-form-item>-->
+
+
+<!--          <el-form-item label="项目" prop="ProjectId">
+            <el-select v-model="value" multiple clearable collapse-tags placeholder="选择项目" popper-class="custom-header" :max-collapse-tags="1">
+              <template #header>
+                <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">全选</el-checkbox>
+              </template>
+              <el-option v-for="item in cities" :key="item.value" :label="item.label" :value="item.value"/>
+            </el-select>
+          </el-form-item>-->
+
           <el-form-item label="昵称" prop="Nickname">
             <el-input v-model="addUserForm.Nickname" placeholder="输入昵称" clearable/>
           </el-form-item>
@@ -132,19 +152,19 @@
           </el-form-item>
           <el-form-item label="角色" prop="RoleId">
             <el-select v-model="editUserForm.RoleId" placeholder="选择角色" filterable clearable remote :loading="LoadRoleLoading"
-                       :remote="true" :loading-text="'正在提取角色'" @visible-change="rmRequestRoleSet">
+                       :loading-text="'正在提取角色'" @visible-change="rmRequestRoleSet">
               <el-option v-for="item in filterRoleSet" :key="item.Id" :label="item.RoleName" :value="item.Id"/>
             </el-select>
           </el-form-item>
           <el-form-item label="部门" prop="DeptId">
             <el-tree-select v-model="editUserForm.DeptId" :data="filterDeptSet" check-strictly :render-after-expand="false" filterable clearable
-                            :loading="LoadDeptLoading" :loading-text="'正在提取部门'" placeholder="选择部门"
-                            @click="getRemoteDeptSet" :props="{value:'Id', label: 'DeptName', children: 'ChildDeptTable'}"
+                            :loading-text="'正在提取部门'" placeholder="选择部门"
+                            @visible-change="getRemoteDeptSet" :props="{value:'Id', label: 'DeptName', children: 'ChildDeptTable'}"
                             default-expand-all/>
           </el-form-item>
           <el-form-item label="岗位" prop="PostId">
             <el-select v-model="editUserForm.PostId" placeholder="选择岗位" filterable clearable remote :loading="LoadPostLoading"
-                       :remote="true" :loading-text="'正在提取岗位'" @visible-change="rmRequestPostSet">
+                       :loading-text="'正在提取岗位'" @visible-change="rmRequestPostSet">
               <el-option v-for="item in filterPostSet" :key="item.Id" :label="item.PostName" :value="item.Id"/>
             </el-select>
           </el-form-item>
@@ -174,13 +194,15 @@
 
 
 <script lang="ts" setup>
-import {onMounted, reactive, ref} from "vue";
-import {ElDialog, ElMessage, ElMessageBox, ElTable, ElTableColumn, FormInstance, type FormRules} from 'element-plus';
+import {onMounted, reactive, ref, watch} from "vue";
+
+import {CheckboxValueType, ElDialog, ElMessage, ElMessageBox, ElTable, ElTableColumn, FormInstance, type FormRules} from 'element-plus';
 import {useRouter} from 'vue-router'
 import {CopyText} from '@/utils/public'
 import api from "@/api"
 import {headerCellStyle} from '@/css/base.js'
 
+import ProjectDropDownMultiple from "@/views/components/ProjectDropDownMultiple.vue";
 const router = useRouter();
 
 
@@ -225,6 +247,7 @@ interface AddUserStruct {
   PassWord: string
   Email: string
   Phone: string
+  ProjectId: string
 }
 
 interface EditUserStruct {
@@ -238,8 +261,9 @@ interface EditUserStruct {
   Phone: string
 }
 
-let addUserForm = reactive<AddUserStruct>({DeptId: "", Email: "", Nickname: "", Phone: "", PostId: "", RoleId: "", UserName: "", PassWord: ""})
-let editUserForm = reactive<EditUserStruct>({DeptId: "", Email: "", Id: "", Nickname: "", Phone: "", PostId: "", RoleId: "", UserName: ""})
+let addUserForm = reactive<AddUserStruct>({DeptId: "", Email: "", Nickname: "", Phone: "", PostId: "", RoleId: "", UserName: "", PassWord: "", ProjectId: ""})
+let editUserForm = reactive<EditUserStruct>({DeptId: "", Email: "", Id: "", Nickname: "", Phone: "", PostId: "", RoleId: "", UserName: "", ProjectId: ""})
+
 
 let Loading = ref<boolean>(false); // 搜索\重置、新增按钮,表格loading使用
 let addLoading = ref<boolean>(false); // 添加弹出层加载按钮
@@ -531,8 +555,10 @@ const getRemoteRoleSet = async () => {
 
 // 请求部门数据api
 const getRemoteDeptSet = async () => {
+  console.log("go getRemoteDeptSet")
   LoadDeptLoading.value = true
   const {data: res} = await api.getDeptSetDropDown()
+  console.log("data: ", res.data);
   if (res.code !== 200) {
     LoadDeptLoading.value = false
     ElMessage.error(res.message)
@@ -564,6 +590,40 @@ const getRemotePostSet = async () => {
   LoadPostLoading.value = false
 }
 
+/*const checkAll = ref(false)
+const indeterminate = ref(false)
+const value = ref<CheckboxValueType[]>([])
+const cities = ref([
+  {
+    value: 'Beijing',
+    label: 'Beijing',
+  },
+  {
+    value: 'Shanghai',
+    label: 'Shanghai',
+  },
+])
+
+watch(value, (val) => {
+  if (val.length === 0) {
+    checkAll.value = false
+    indeterminate.value = false
+  } else if (val.length === cities.value.length) {
+    checkAll.value = true
+    indeterminate.value = false
+  } else {
+    indeterminate.value = true
+  }
+})
+
+const handleCheckAll = (val: CheckboxValueType) => {
+  indeterminate.value = false
+  if (val) {
+    value.value = cities.value.map((_) => _.value)
+  } else {
+    value.value = []
+  }
+}*/
 
 onMounted(() => {
   getUserList(queryParams)
@@ -573,5 +633,10 @@ onMounted(() => {
 </script>
 
 <style scoped>
-
+.custom-header {
+  .el-checkbox {
+    display: flex;
+    height: unset;
+  }
+}
 </style>
