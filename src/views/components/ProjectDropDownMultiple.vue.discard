@@ -15,7 +15,8 @@
 </template>
 
 
-<script lang="ts" setup>
+
+<script lang="ts" setup>// 暂时不用本页面全部组件
 import {useRouter} from 'vue-router'
 import {CheckboxValueType, ElMessage} from 'element-plus';
 import {onMounted, reactive, ref, watch} from "vue";

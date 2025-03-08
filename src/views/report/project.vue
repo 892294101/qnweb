@@ -59,7 +59,7 @@
         <el-form :inline="true" ref="AddProjectFormRef" :model="addProjectForm" :rules="AddEditProjectFormRules"
                  class="demo-form-inline" status-icon label-width="100px">
           <el-form-item label="部门" prop="DeptId">
-            <DeptDropDown v-model="addProjectForm.DeptId"></DeptDropDown>
+            <DeptDropDown v-model="addProjectForm.DeptId"/>
           </el-form-item>
           <el-form-item label="所属人" prop="DeptPerson">
             <el-input v-model="addProjectForm.DeptPerson" placeholder="输入项目所属人" clearable/>

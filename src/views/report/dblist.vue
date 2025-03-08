@@ -45,11 +45,11 @@
         </el-row>
       </div>
       <el-form :inline="true">
-        <el-table size="small" v-loading="Loading" border stripe :data="queryList" style="width: 100%;"  :header-cell-style="headerCellStyle"
+        <el-table size="small" v-loading="Loading" border stripe :data="queryList" style="width: 100%;" :header-cell-style="headerCellStyle"
                   @cell-click="CopyText">
           <el-table-column label="ID" prop="Id" v-if="false"/>
-          <el-table-column fixed label="项目组" prop="DeptName" min-width="120" width="auto" show-overflow-tooltip  :sortable="true" :sort-orders="sortOrders"/>
-          <el-table-column fixed label="平台" prop="PlatformName" min-width="200" width="auto" show-overflow-tooltip  :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column fixed label="项目组" prop="DeptName" min-width="120" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column fixed label="平台" prop="PlatformName" min-width="200" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column fixed label="主机组" prop="GroupName" min-width="150" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="主机组编码" prop="GroupCode" v-if="false" :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="类型" prop="DbType" min-width="80" width="auto" :formatter="formatDbType" :sortable="true" :sort-orders="sortOrders"/>
@@ -84,10 +84,12 @@
         <el-form :inline="true" ref="AddDBFormRef" :model="addDBForm" :rules="AddEditCloneDBFormRules"
                  class="demo-form-inline" status-icon label-width="100px">
           <el-form-item label="主机组" prop="hostGroup">
-            <el-select v-model="addDBForm.hostGroup" placeholder="选择主机组" filterable clearable remote :loading="LoadHostGroupLoading"
-                       :loading-text="'正在提取主机组'" @visible-change="rmRequestHostGroup" @change="listenerHostGroup">
-              <el-option v-for="item in filterHostGroupSet" :key="item.GroupCode" :label="item.GroupName" :value="item.GroupCode"/>
-            </el-select>
+            <HostGroupDropDown v-model="addDBForm.hostGroup"/>
+
+            <!--            <el-select v-model="addDBForm.hostGroup" placeholder="选择主机组" filterable clearable remote :loading="LoadHostGroupLoading"
+                                   :loading-text="'正在提取主机组'" @visible-change="rmRequestHostGroup" @change="listenerHostGroup">
+                          <el-option v-for="item in filterHostGroupSet" :key="item.GroupCode" :label="item.GroupName" :value="item.GroupCode"/>
+                        </el-select>-->
           </el-form-item>
           <el-form-item label="类型" prop="dbType">
             <el-select id="dbType" placeholder="选择数据库类型" v-model="addDBForm.dbType" clearable>
@@ -141,10 +143,7 @@
         <el-form :inline="true" ref="EditDBFormRef" :model="editDBForm" :rules="AddEditCloneDBFormRules"
                  class="demo-form-inline" status-icon label-width="100px">
           <el-form-item label="主机组" prop="hostGroup">
-            <el-select v-model="editDBForm.hostGroup" placeholder="选择主机组" filterable clearable remote :loading="LoadHostGroupLoading"
-                        :loading-text="'正在提取主机组'" @visible-change="rmRequestHostGroup" @change="listenerHostGroup">
-              <el-option v-for="item in filterHostGroupSet" :key="item.GroupCode" :label="item.GroupName" :value="item.GroupCode"/>
-            </el-select>
+            <HostGroupDropDown v-model="editDBForm.hostGroup"/>
           </el-form-item>
 
           <el-form-item label="类型" prop="dbType">
@@ -209,6 +208,8 @@ import api from "@/api";
 import {useRouter} from 'vue-router'
 import {CopyText} from '@/utils/public'
 import {headerCellStyle} from '@/css/base.js'
+import HostGroupDropDown from "@/views/components/HostGroupDropDown.vue";
+
 const router = useRouter();
 
 let PermCodeAddDB = ref<object>({"TargetPerm": '/report/database/add', "CurrentRouter": router.currentRoute.value.path})
@@ -522,9 +523,7 @@ const openAddDBEvent = async () => {
 // 打开编辑图层. 清空form表单
 const openEditDBEvent = async <T extends dbListStruct>(row: T): Promise<void> => {
   // 提前获取主机组下拉菜单,否则无法正常显示.
-  await getRemoteHostGroup()
-
-
+  // await getRemoteHostGroup()
   clearEditDBForm(editDBForm) // 清除编辑表单
   clearHostBody(HostBody) // 清除编辑表单中的主机信息
   listenerHostGroup(row.GroupCode) // 手动调用并加载编辑表单中的主机信息
@@ -570,11 +569,11 @@ const getRemoteHostGroup = async () => {
 }
 
 // 请求主机组数据的事件
-const rmRequestHostGroup = visible => {
+/*const rmRequestHostGroup = visible => {
   if (visible) {
     getRemoteHostGroup()
   }
-}
+}*/
 
 interface HostBodyStruct {
   GroupCode: string,
