@@ -304,7 +304,7 @@ let addUserDialogVisible = ref(false) // 添加图层显示
 let editUserDialogVisible = ref(false)  // 编辑图层显示
 
 const AddEditUserFormRules: FormRules = {
-  UserName: [{required: true, message: "请输入用户名称", trigger: "blur", min: 5, max: 30}],
+  UserName: [{required: true, message: "请输入用户名称", trigger: "blur", min: 4, max: 30}],
   Nickname: [{required: false}],
   RoleId: [{required: true, message: "请选择角色", trigger: "blur"}],
   DeptId: [{required: true, message: "请选择部门", trigger: "blur"}],

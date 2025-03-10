@@ -75,8 +75,8 @@
           </el-row>
           <el-row>
             <el-form-item label="主机" prop="HostId">
-              <div style="display: flex; justify-content: center; ">
-                <el-table height="166px" max-height="166px" :data="addHostGroupForm.HostId" border style=" font-size: 8px;" size="small">
+              <div style="display: flex; justify-content: center; " >
+                <el-table :data="addHostGroupForm.HostId" border style="font-size: 8px; border-radius: 4px; height: 200px; overflow: auto; width: 472px" size="small"  > <!-- 表格高度: height="166px" max-height="166px"    -->
                   <el-table-column prop="Host.Id" label="主机" width="120">
                     <template #default="{row}">
                       <el-form-item prop="Host.Id" size="small" style="width: 104px;">
@@ -91,12 +91,12 @@
                   <el-table-column width="45">
                     <template #header>
                       <div style="text-align: center;">
-                        <el-button type="text" circle icon="CirclePlus" @click="addRowForAdd" size="small"/>
+                        <el-button type="success" circle icon="CirclePlus" @click="addRowForAdd" size="small"/>
                       </div>
                     </template>
                     <template #default="{row}">
                       <div style="text-align: center;">
-                        <el-button type="text" circle icon="Close" @click="deleteRowForAdd(row)" size="small"/>
+                        <el-button type="danger" circle icon="Close" @click="deleteRowForAdd(row)" size="small"/>
                       </div>
                     </template>
                   </el-table-column>
@@ -131,7 +131,7 @@
           <el-row>
             <el-form-item label="主机" prop="HostId">
               <div style="display: flex; justify-content: center; ">
-                <el-table height="166px" max-height="166px" :data="editHostGroupForm.HostId" border style="width: 100%; font-size: 8px;" size="small">
+                <el-table :data="editHostGroupForm.HostId" border style="font-size: 8px; border-radius: 4px; height: 200px; overflow: auto; width: 472px" size="small">
                   <el-table-column prop="Host.Id" label="主机" width="120">
                     <template #default="{row}">
                       <el-form-item prop="Host.Id" size="small" style="width: 104px;">
@@ -146,12 +146,12 @@
                   <el-table-column width="45">
                     <template #header>
                       <div style="text-align: center;">
-                        <el-button type="text" circle icon="CirclePlus" @click="addRowForEdit" size="small"/>
+                        <el-button type="success" circle icon="CirclePlus" @click="addRowForEdit" size="small"/>
                       </div>
                     </template>
                     <template #default="{row}">
                       <div style="text-align: center;">
-                        <el-button type="text" circle icon="Close" @click="deleteRowForEdit(row)" size="small"/>
+                        <el-button type="danger" circle icon="Close" @click="deleteRowForEdit(row)" size="small"/>
                       </div>
                     </template>
                   </el-table-column>
@@ -544,7 +544,8 @@ const handleHostSelectForEdit = ((selectedHostId: HostStruct, currentRow: HostSt
           editHostGroupForm.HostId[i].Host.Id !== undefined &&
           editHostGroupForm.HostId[i].Host.Id.length > 0) {
         if (editHostGroupForm.HostId[i].Host.DeptName !== currentRow.Host.DeptName ||
-            editHostGroupForm.HostId[i].Host.PlatformName !== currentRow.Host.PlatformName) {
+            editHostGroupForm.HostId[i].Host.PlatformName !== currentRow.Host.PlatformName ||
+            editHostGroupForm.HostId[i].Host.BusinessName !== currentRow.Host.BusinessName ) {
           let addressSet: AddressStruct = {
             Id: "",
             DeptName: "",
@@ -598,7 +599,8 @@ const handleHostSelectForAdd = ((selectedHostId: HostStruct, currentRow: HostStr
           addHostGroupForm.HostId[i].Host.Id !== undefined &&
           addHostGroupForm.HostId[i].Host.Id.length > 0) {
         if (addHostGroupForm.HostId[i].Host.DeptName !== currentRow.Host.DeptName ||
-            addHostGroupForm.HostId[i].Host.PlatformName !== currentRow.Host.PlatformName) {
+            addHostGroupForm.HostId[i].Host.PlatformName !== currentRow.Host.PlatformName ||
+            addHostGroupForm.HostId[i].Host.BusinessName !== currentRow.Host.BusinessName ) {
           let addressSet: AddressStruct = {
             Id: "",
             DeptName: "",
@@ -706,3 +708,9 @@ onMounted(() => {
 
 
 </script>
+<style scoped>
+.custom-table {
+
+  border: 1px solid #b4bbc1; /* 设置边框颜色和样式 */
+}
+</style>

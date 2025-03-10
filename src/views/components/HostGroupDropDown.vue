@@ -1,9 +1,9 @@
 <template>
   <el-select v-model="GroupCode" placeholder="选择主机组" filterable clearable remote :loading="LoadHostGroupLoading"
              :loading-text="'正在提取主机组'" @visible-change="rmRequestHostGroup">
-    <el-option v-for="item in filterHostGroupSet" :key="item.GroupCode" :label="item.GroupName" :value="item.GroupCode" :style="{ fontSize: '10px' }">
+    <el-option v-for="item in filterHostGroupSet" :key="item.GroupCode" :label="item.GroupName" :value="item.GroupCode" :style="{ fontSize: '12px' }">
       <span style="float: left">{{ item.GroupName }}</span>
-      <span style="float: right;color: var(--el-text-color-secondary); font-size: 10px;">{{ item.PlatformName }}</span>
+      <span style="float: right;color: #55d688; font-size: 12px;">{{ item.PlatformName }}</span>
     </el-option>
   </el-select>
 </template>

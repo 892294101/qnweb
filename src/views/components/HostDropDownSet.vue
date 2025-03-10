@@ -2,7 +2,11 @@
   <el-select v-model="ObjSet" placeholder="选择主机" :value-key="'Id'"
              filterable clearable remote :loading="LoadHostLoading"
              :loading-text="'正在提取主机'" @visible-change="rmRequestHost">
-    <el-option v-for="item in filterHostSet" :key="item.Id" :label="`${item.Address}`" :value="item" :style="{ fontSize: '10px', color: '#828282' }"/>
+    <el-option v-for="item in filterHostSet" :key="item.Id" :label="`${item.Address}`" :value="item" :style="{ fontSize: '12px', color: '#828282' }">
+      <span style="display: inline-block; width: 100px; text-align: left;">{{ item.Address }}</span>
+      <span style="display: inline-block; width: 120px; text-align: left; font-size: 12px;">{{ item.PlatformName }}</span>
+      <span style="display: inline-block; width: 120px; text-align: right; color: red; font-size: 12px;">{{ item.BusinessName }}</span>
+    </el-option>
   </el-select>
 </template>
 
@@ -23,7 +27,7 @@ interface ValueStruct {
 
 interface HostStruct {
   Id: string
-  ProjectName: string
+  DeptName: string
   PlatformName: string
   BusinessName: string
   Address: string
@@ -59,6 +63,7 @@ const getRemoteHost = async () => {
     }
   }
   LoadHostLoading.value = false
+  console.log("filterHostSet:",filterHostSet)
 }
 
 onMounted(() => {
@@ -66,8 +71,3 @@ onMounted(() => {
 })
 
 </script>
-
-
-<style scoped lang="scss">
-
-</style>

@@ -4,11 +4,7 @@
     <el-option v-for="item in filterPlatformSet" :key="item.Id" :label="`${item.PlatformName}`" :value="item.Id" :style="{ fontSize: '12px' }">
       <span style="float: left">{{ item.PlatformName}}</span>
       <span
-          style="
-          float: right;
-          color: var(--el-text-color-secondary);
-          font-size: 10px;
-        "
+          style="float: right;color: #55d688; font-size: 10px;"
       >{{ item.ProjectName }}</span
       >
     </el-option>
