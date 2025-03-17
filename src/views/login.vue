@@ -46,7 +46,7 @@ const router = useRouter();
 const {cookies} = useCookies();
 const Loading = ref<boolean>(false);
 const rules: FormRules = {
-  username: [{required: true, message: "请输入账号", trigger: "blur", min: 5, max: 30}],
+  username: [{required: true, message: "请输入账号", trigger: "blur", min: 4, max: 30}],
   password: [{required: true, message: "请输入密码", trigger: "blur", min: 5, max: 30}],
   image: [{required: true, message: "请输入验证码", trigger: "blur", min: 4, max: 4}]
 };
