@@ -84,12 +84,26 @@ const submitLoginForm = (formEl: FormInstance | undefined) => {
         loginForm.password = ''
         Loading.value = false
       } else {
-        ElMessage.success({message: "登录成功", center: true})
         storage.setItem('user', res.data.username);
         storage.setItem('icon', res.data.icon);
         storage.setVCookie('token', res.data.token)
-        await router.push({path: "/index"})
 
+        // 登录组件中，登录成功后：
+        // 获取重定向地址,如果存在则跳转,否则定向到主页
+        const redirectData = sessionStorage.getItem('UserRedirect');
+        console.log("redirectData: ", redirectData) 
+        if (redirectData) {
+          ElMessage.success({message: "登录成功，跳转中···", center: true})
+          setTimeout(async () => {
+            await router.push(redirectData);
+          }, 500);
+        } else {
+          ElMessage.success({message: "登录成功", center: true})
+          setTimeout(async () => {
+            await router.push({path: "/index"})
+          }, 500);
+        }
+        sessionStorage.removeItem('redirect');
         Loading.value = false
       }
     }
