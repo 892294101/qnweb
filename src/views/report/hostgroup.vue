@@ -39,7 +39,7 @@
           <el-table-column label="ID" prop="Id" v-if="false"/>
           <el-table-column fixed label="项目组" prop="DeptName" min-width="120" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column fixed label="平台名" prop="PlatformName" min-width="180" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
-          <el-table-column label="主机组" prop="GroupName" min-width="120" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="主机组" prop="GroupName" min-width="250" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="主机组编码" prop="GroupCode" min-width="150" width="auto" v-if="false" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="IP地址" prop="Address" min-width="220" width="auto" show-overflow-tooltip :sortable="true" :sort-orders="sortOrders"/>
           <el-table-column label="备注" prop="Note.String" width="150" show-overflow-tooltip/>
