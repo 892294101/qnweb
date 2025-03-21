@@ -2,7 +2,7 @@
   <div class="login_container">
     <div class="login_box">
       <el-form class="login_form" ref="loginFormRef" :rules="rules" :model="loginForm">
-        <div class="title">管理系统</div>
+        <div class="title">{{ APP_TITLE }}</div>
         <el-form-item prop="username" size="large">
           <el-input size="large" @keydown.enter.capture="submitLoginForm(loginFormRef)" ref="usernameRef" prefix-icon="Avatar" placeholder="账号" v-model="loginForm.username" maxlength="20"
                     clearable></el-input>
@@ -41,6 +41,8 @@ import {useRouter} from 'vue-router'
 import {useCookies} from "vue3-cookies";
 import api from '@/api'
 import storage from '@/utils/storage'
+
+const APP_TITLE = import.meta.env.VITE_APP_TITLE
 
 const router = useRouter();
 const {cookies} = useCookies();
@@ -91,7 +93,7 @@ const submitLoginForm = (formEl: FormInstance | undefined) => {
         // 登录组件中，登录成功后：
         // 获取重定向地址,如果存在则跳转,否则定向到主页
         const redirectData = sessionStorage.getItem('UserRedirect');
-        console.log("redirectData: ", redirectData) 
+        console.log("redirectData: ", redirectData)
         if (redirectData) {
           ElMessage.success({message: "登录成功，跳转中···", center: true})
           setTimeout(async () => {
