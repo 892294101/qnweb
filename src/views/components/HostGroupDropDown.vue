@@ -12,19 +12,30 @@
 <script lang="ts" setup>
 import {useRouter} from 'vue-router'
 import {ElMessage} from 'element-plus';
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 import api from "@/api";
+
 
 const router = useRouter();
 
+const props = defineProps({
+  groupCodeParent: String,
+});
+
+interface HostGroupDropDownProps {
+  GroupCode: string,
+}
+
+let GroupCodeFromParent = reactive<HostGroupDropDownProps>({GroupCode: props.groupCodeParent || ""})
+
+//let GroupCodeFromParent = ref<string>(props.groupCodeParent || "")
+
+
 let GroupCode = ref<string>("")
-
 let LoadHostGroupLoading = ref<boolean>(false);
-
-
 const rmRequestHostGroup = visible => {
   if (visible) {
-    getRemoteHostGroup()
+    getRemoteHostGroup(GroupCodeFromParent)
   }
 }
 
@@ -39,9 +50,9 @@ interface HostGroupStruct {
 
 let filterHostGroupSet = reactive<HostGroupStruct[]>([])
 
-const getRemoteHostGroup = async () => {
+const getRemoteHostGroup = async (data) => {
   LoadHostGroupLoading.value = true
-  const {data: res} = await api.getHostGroupDropDown()
+  const {data: res} = await api.getHostGroupDropDown(data)
   if (res.code !== 200) {
     ElMessage.error(res.message)
     return
@@ -56,8 +67,13 @@ const getRemoteHostGroup = async () => {
 }
 
 onMounted(() => {
-  getRemoteHostGroup()
+  getRemoteHostGroup(GroupCodeFromParent)
 })
+
+watch(() => props.groupCodeParent, (newValue) => {
+  GroupCodeFromParent.GroupCode = newValue || "";
+  console.log("GroupCodeFromParent.value:", GroupCodeFromParent.GroupCode);
+});
 
 </script>
 

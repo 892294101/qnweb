@@ -107,20 +107,7 @@
                        :active-value='"1"' :inactive-value='"0"' style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949" active-text="在线"
                        inactive-text="下线"/>
           </el-form-item>
-          <el-row v-if="HostBody.GroupName.length > 0">
-            <el-form-item label="主机信息">
-              <div style="display: flex; justify-content: center; ">
-                <el-row>
-                  <el-table :data="[HostBody]" border style="width: 100%; font-size: 8px; " size="small">
-                    <el-table-column prop="DeptName" label="项目组" width="100" show-overflow-tooltip/>
-                    <el-table-column prop="PlatformName" label="平台" width="100" show-overflow-tooltip/>
-                    <el-table-column prop="GroupName" label="主机组" width="80" show-overflow-tooltip/>
-                    <el-table-column prop="Address" label="地址" width="192" show-overflow-tooltip/>
-                  </el-table>
-                </el-row>
-              </div>
-            </el-form-item>
-          </el-row>
+
           <el-row>
             <el-form-item label="备注" prop="note" style="width: 572px;">
               <el-input type="textarea" :rows="3" placeholder="可选" v-model="addDBForm.note"/>
@@ -143,7 +130,7 @@
         <el-form :inline="true" ref="EditDBFormRef" :model="editDBForm" :rules="AddEditCloneDBFormRules"
                  class="demo-form-inline" status-icon label-width="100px">
           <el-form-item label="主机组" prop="hostGroup">
-            <HostGroupDropDown v-model="editDBForm.hostGroup"/>
+            <HostGroupDropDown v-model="editDBForm.hostGroup" :groupCodeParent="editDBForm.hostGroup"/>
           </el-form-item>
 
           <el-form-item label="类型" prop="dbType">
@@ -158,27 +145,11 @@
           <el-form-item label="密码" prop="password">
             <el-input v-model="editDBForm.password" placeholder="输入数据库密码" clearable/>
           </el-form-item>
-
-
           <el-form-item label="状态" prop="status">
             <el-switch class="ml-2" size="large" v-model="editDBForm.status" inline-prompt
                        :active-value='"1"' :inactive-value='"0"' style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949" active-text="在线"
                        inactive-text="下线"/>
           </el-form-item>
-          <el-row v-if="HostBody.GroupName.length > 0">
-            <el-form-item label="主机信息">
-              <div style="display: flex; justify-content: center; ">
-                <el-row>
-                  <el-table :data="[HostBody]" border style="width: 100%; font-size: 8px; " size="small">
-                    <el-table-column prop="DeptName" label="项目组" width="100"/>
-                    <el-table-column prop="PlatformName" label="平台" width="100"/>
-                    <el-table-column prop="GroupName" label="主机组" width="80"/>
-                    <el-table-column prop="Address" label="地址" width="192"/>
-                  </el-table>
-                </el-row>
-              </div>
-            </el-form-item>
-          </el-row>
           <el-row>
             <el-form-item label="备注" prop="note" style="width: 572px;">
               <el-input type="textarea" :rows="3" placeholder="可选" v-model="editDBForm.note"/>
@@ -251,10 +222,14 @@ interface dbListStruct {
 
 
 let dbType = [
+  {value: '0', label: '其它',},
   {value: '1', label: 'Oracle',},
   {value: '2', label: 'MySQL',},
   {value: '3', label: 'MongoDB',},
-  {value: '4', label: 'Postgres',}
+  {value: '4', label: 'Postgres',},
+  {value: '5', label: 'ClickHouse'},
+  {value: '6', label: 'TDSQL'},
+  {value: '7', label: 'Redis',},
 ]
 
 let onlineStatus = [

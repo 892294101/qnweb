@@ -224,6 +224,7 @@ import {CopyText} from '@/utils/public'
 import api from "@/api";
 import {headerCellStyle} from '@/css/base.js'
 import PlatformDropDown from "@/views/components/PlatformDropDown.vue";
+import validator from 'validator';
 
 const sortOrders = ['ascending', 'descending', null];
 
@@ -319,9 +320,9 @@ let editHostDialogVisible = ref(false)  // 编辑图层显示
 const ipPattern = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 
 const AddEditHostFormRules: FormRules = {
-  PlatformId: [{required: true, message: "请选择平台名称", trigger: "blur"},],
+  PlatformId: [{required: true, message: "请选择平台名称", trigger: "changer"},],
   BusinessName: [
-    {required: true, message: "最少2位，最长30位", trigger: "blur", min: 2, max: 30},
+    {required: true, message: "最少2位，最长30位", trigger: "changer", min: 2, max: 30},
     {
       validator: (rule, value, callback) => {
         if (value && /^[\u4e00-\u9fa5a-zA-Z0-9\-\\.]+$/.test(value)) {
@@ -333,11 +334,21 @@ const AddEditHostFormRules: FormRules = {
     },
   ],
   Address: [
-    {required: true, message: "请输入主机地址", trigger: "blur"},
-    {pattern: ipPattern, message: "请输入有效的 IP 地址", trigger: "blur"}
+    {required: true, message: "请输入主机地址", trigger: "changer"},
+    //{pattern: ipPattern, message: "请输入有效的 IP 地址", trigger: "blur"}
+    {
+      validator: (rule, value, callback) => {
+        if (value && !ipPattern.test(value) && !validator.isFQDN(value)) {
+          callback(new Error("请输入有效的IP地址或域名"));
+        } else {
+          callback();
+        }
+      },
+      trigger: "changer",
+    },
   ],
   UserName: [
-    {required: false, message: "请输入主机用户", trigger: "blur"},
+    {required: false, message: "请输入主机用户", trigger: "changer"},
     {
       validator: (rule, value, callback) => {
         if (!value && !/^[\u4e00-\u9fa5\u3040-\u30ff\u3130-\u318f\uac00-\ud7af\w-]*$/.test(value)) {
@@ -348,13 +359,23 @@ const AddEditHostFormRules: FormRules = {
       },
     },
   ],
-  PassWord: [{required: false, message: "请输入主机密码", trigger: "blur"}],
+  PassWord: [{required: false, message: "请输入主机密码", trigger: "changer"}],
   RemoteAddress: [
-    {required: true, message: "请输入管理地址", trigger: "blur"},
-    {pattern: ipPattern, message: "请输入有效的 IP 地址", trigger: "blur"}
+    {required: true, message: "请输入管理地址", trigger: "changer"},
+    //{pattern: ipPattern, message: "请输入有效的 IP 地址", trigger: "changer"}
+    {
+      validator: (rule, value, callback) => {
+        if (value && !ipPattern.test(value) && !validator.isFQDN(value)) {
+          callback(new Error("请输入有效的IP地址或域名"));
+        } else {
+          callback();
+        }
+      },
+      trigger: "changer",
+    },
   ],
   RemoteUser: [
-    {required: false, message: "请输入管理用户", trigger: "blur"},
+    {required: false, message: "请输入管理用户", trigger: "changer"},
     {
       validator: (rule, value, callback) => {
         if (!value && !/^[\u4e00-\u9fa5\u3040-\u30ff\u3130-\u318f\uac00-\ud7af\w-]*$/.test(value)) {
