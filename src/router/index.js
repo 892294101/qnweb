@@ -104,19 +104,23 @@ router.beforeEach(async (to, form, next) => {
 
     // 如果不是访问的/login页面，先检查本地存储是否有token，如果没有，跳转到/login让用户登陆
     const tokenStr = storage.getVCookie("token")
-    if (!tokenStr) {
-
+    if (tokenStr !== null && tokenStr !== undefined && tokenStr !== "" ) {
+        console.log("tokenStr: ", tokenStr)
+        // 如果有token，继续判断
         try {
             if (typeof sessionStorage !== undefined) {
                 sessionStorage.setItem("UserRedirect", to.path)
+                console.log('Data stored successfully in sessionStorage: data: ',sessionStorage.getItem("UserRedirect"));
             } else {
                 console.error('sessionStorage is not available.');
             }
         } catch (error) {
             console.error('Error storing data:', error);
         }
+    }else{
         return next('/login')
     }
+
     next()
 })
 

@@ -94,11 +94,12 @@ const submitLoginForm = (formEl: FormInstance | undefined) => {
         // 获取重定向地址,如果存在则跳转,否则定向到主页
         const redirectData = sessionStorage.getItem('UserRedirect');
         console.log("redirectData: ", redirectData)
-        if (redirectData) {
+        if (redirectData !== null && redirectData !== '' && redirectData!== undefined) {
           ElMessage.success({message: "登录成功，跳转中···", center: true})
           setTimeout(async () => {
             await router.push(redirectData);
           }, 500);
+          sessionStorage.removeItem('UserRedirect');
         } else {
           ElMessage.success({message: "登录成功", center: true})
           setTimeout(async () => {
