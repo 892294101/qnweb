@@ -1,10 +1,11 @@
 import request from "@/utils/request"
+import {Method} from 'axios-mapper'
 
 export default {
     reqCaptcha() {
         return request({
             url: "/captcha",
-            method: 'get'
+            method: Method.GET,
         })
     },
     login(params) {
@@ -411,5 +412,45 @@ export default {
         })
     },
 
+
+    // *************************** CDR ************************** //
+    getCDRDayList(data) {
+        return request({
+            url: "/cdr/day",
+            method: 'post',
+            data: data
+        })
+    },
+    getCDRMonthList(data) {
+        return request({
+            url: "/cdr/month",
+            method: 'post',
+            data: data
+        })
+    },
+    getCDRStateList(data) {
+        return request({
+            url: "/cdr/state",
+            method: 'post',
+            data: data
+        })
+    },
+    getCDRStateDownload(data) {
+        return request({
+            url: "/cdr/state/download",
+            method: Method.POST,
+            data: data,
+            responseType: 'blob',
+            timeout: 600000,
+            cache: 'no-cache',
+        })
+    },
+    getCDRLackList(data) {
+        return request({
+            url: "/cdr/lack",
+            method: Method.POST,
+            data: data
+        })
+    },
 
 }

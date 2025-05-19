@@ -9,6 +9,7 @@ import 'element-plus/theme-chalk/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import 'virtual:svg-icons-register'
 import svgIcon from './components/svgicons/index.vue'
+import zhCn from 'element-plus/es/locale/lang/zh-cn' // 中文语言包
 
 import './assets/css/global.css'
 import "./css/base.css"
@@ -24,7 +25,7 @@ app.config.globalProperties.$storage = storage*/
 
 app.use(router)
 app.use(pinia)
-app.use(ElementPlus)
+app.use(ElementPlus, {locale: zhCn})
 app.directive('button-permission', buttonPermissionDirective) // 组册自定义指令
 app.directive('permission', elementPermissionDirective) // 组册自定义指令
 

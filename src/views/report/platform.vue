@@ -35,10 +35,10 @@
                   :header-cell-style="headerCellStyle" @cell-click="CopyText">
           <el-table-column label="ID" prop="Id" v-if="false"/>
           <el-table-column label="项目名" prop="DeptName" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
-          <el-table-column label="平台名" prop="PlatformName" min-width="180" width="auto" :sortable="true" :sort-orders="sortOrders"/>
-          <el-table-column label="所属人" prop="DeptPerson" min-width="70" width="auto" :sortable="true" :sort-orders="sortOrders"/>
-          <el-table-column label="创建时间" prop="CreateTime" min-width="150" width="auto" :sortable="true" :sort-orders="sortOrders"/>
-          <el-table-column label="备注" prop="Note.String" width="120"/>
+          <el-table-column label="平台名" prop="PlatformName" min-width="300" width="auto" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="所属人" prop="DeptPerson" min-width="120" width="auto" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="创建时间" prop="CreateTime" min-width="200" width="auto" :sortable="true" :sort-orders="sortOrders"/>
+          <el-table-column label="备注" prop="Note.String" width="250"/>
           <el-table-column label="更多操作" fixed="right" min-width="150" width="auto">
             <template v-slot="scope">
               <div class="button-container">

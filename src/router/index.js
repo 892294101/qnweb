@@ -71,6 +71,26 @@ const routers = [
                 meta: {sTitle: '信息管理', tTitle: 'Redis'}
             },
             {
+                path: '/cdr/day',
+                component: () => import("@/views/cdr/day.vue"),
+                meta: {sTitle: '话单报表', tTitle: '天统计'}
+            },
+            {
+                path: '/cdr/month',
+                component: () => import("@/views/cdr/month.vue"),
+                meta: {sTitle: '话单报表', tTitle: '月统计'}
+            },
+            {
+                path: '/cdr/state',
+                component: () => import("@/views/cdr/state.vue"),
+                meta: {sTitle: '话单报表', tTitle: '号码状态'}
+            },
+            {
+                path: '/cdr/lack',
+                component: () => import("@/views/cdr/lack.vue"),
+                meta: {sTitle: '话单报表', tTitle: '号码缺失'}
+            },
+            {
                 path: '/logs/loginlog',
                 component: () => import("@/views/logs/LoginLog.vue"),
                 meta: {sTitle: '日志管理', tTitle: '登陆日志'}

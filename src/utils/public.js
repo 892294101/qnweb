@@ -1,6 +1,16 @@
 import {ElMessage} from "element-plus";
 import useClipboard from 'vue-clipboard3';
 
+
+/*
+import qfs from "fs";
+export const createWriteStream = (str) => {
+    //  const path = qfs.join(process.cwd(), 'data', 'data.json')
+    return qfs.createWriteStream(str)
+}
+*/
+
+
 const {toClipboard} = useClipboard();
 
 

@@ -33,8 +33,7 @@
 
 
       <!-- 添加表单-->
-      <el-dialog v-model="addDeptDialogVisible" title="添加部门" destroy-on-close left width="650" style="border-radius: 4px;"
-                 :show-close="false" ref="AddDeptFormRef">
+      <el-dialog v-model="addDeptDialogVisible" title="添加部门" destroy-on-close left width="650" style="border-radius: 4px;" :show-close="false">
         <el-form :inline="true" ref="AddDeptFormRef" :model="addDeptForm" :rules="AddEditDeptFormRules"
                  class="demo-form-inline" status-icon label-width="100px">
           <el-form-item label="部门名称" prop="DeptName">
@@ -168,8 +167,8 @@ let addDeptDialogVisible = ref(false) // 添加图层显示
 let editDeptDialogVisible = ref(false)  // 编辑图层显示
 
 const AddEditDeptFormRules: FormRules = {
-  DeptName: [{required: true, message: "请输入部门名称", trigger: "blur"}],
-  DeptType: [{required: true, message: "请选择部门类型", trigger: "blur"}]
+  DeptName: [{required: true, message: "请输入部门名称", trigger: "change"}],
+  DeptType: [{required: true, message: "请选择部门类型", trigger: "change"}]
 };
 
 // 查询表单的Ref
@@ -276,6 +275,7 @@ const cancelEditDeptFormClose = ((formEl: FormInstance | undefined) => {
   formEl.resetFields()
   editDeptDialogVisible.value = false
 })
+
 
 const CommitAddDeptEvent = (async (formEl: FormInstance | undefined, formE2: FormInstance | undefined) => {
   if (!formEl) return;
