@@ -101,6 +101,7 @@ import {headerCellStyle} from '@/css/base.js'
 import api from "@/api";
 import streamSaver from 'streamsaver'
 import storage from "@/utils/storage.js";
+import 'web-streams-polyfill';
 
 
 const router = useRouter();
@@ -327,6 +328,12 @@ const DownloadCallState = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate(async (valid: boolean) => {
         if (valid) {
+          const isChrome = /Chrome/.test(navigator.userAgent);
+          if (!isChrome) {
+            ElMessage({type: 'error', message: '实时数据流需要使用Chrome浏览器!'})
+            return
+          }
+
           Loading.value = true;
           const currentDate = new Date();
           const year = currentDate.getFullYear(); // 获取完整的年份 (例如：2025)
@@ -360,9 +367,11 @@ const DownloadCallState = async (formEl: FormInstance | undefined) => {
               return
             }
 
+
             const fileStream = streamSaver.createWriteStream(formattedString + '-CDR-Data.csv', {size: uInt8.byteLength,})
             const readableStream = res.body
             if (window.WritableStream && readableStream.pipeTo) {
+              ElMessage({type: 'success', message: '下载中，当前页面请勿关闭!'})
               return readableStream.pipeTo(fileStream).then(
                   () => console.log('完成写入')
               )
@@ -373,10 +382,9 @@ const DownloadCallState = async (formEl: FormInstance | undefined) => {
             const pump = () => reader.read().then(
                 res => res.done ? writer.close() : writer.write(res.value).then(pump)
             )
-            pump()
-
+            await pump()
           } catch (writeError) {
-            console.error('  手动 Piping - 写入数据块失败:', writeError);
+            console.error('手动 Piping - 写入数据块失败:', writeError);
             throw writeError;
           } finally {
             Loading.value = false;

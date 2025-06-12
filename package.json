@@ -39,7 +39,8 @@
     "vue-route": "^1.5.1",
     "vue-router": "latest",
     "vue3-cookies": "^1.0.6",
-    "vue3-treeselect": "^0.1.10"
+    "vue3-treeselect": "^0.1.10",
+    "web-streams-polyfill": "^4.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.2",
